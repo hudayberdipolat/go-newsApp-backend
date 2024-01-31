@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/hudayberdipolat/go-newsApp-backend/internal/setup/routes"
 	"time"
 )
 
@@ -25,6 +26,6 @@ func NewApp(dependencies *Dependencies) (httpServer *fiber.App) {
 	})
 
 	// get routes routes
-
+	routes.AdminRoutes(httpServer)
 	return httpServer
 }
