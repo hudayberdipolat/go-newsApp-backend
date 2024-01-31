@@ -8,6 +8,8 @@ import (
 type Config struct {
 	DBConfig   dbConfig   `json:"db_config"`
 	HttpConfig httpConfig `json:"http_config"`
+	RootPath   string     `json:"root_path"`
+	PublicPath string     `json:"public_path"`
 }
 
 type dbConfig struct {
@@ -48,6 +50,8 @@ func GetConfig() (*Config, error) {
 			AppName:    os.Getenv("APP_NAME"),
 			AppHeader:  os.Getenv("APP_HEADER"),
 		},
+		RootPath:   os.Getenv("ROOT_PATH"),
+		PublicPath: os.Getenv("PUBLIC_PATH"),
 	}
 	return &cfg, nil
 }

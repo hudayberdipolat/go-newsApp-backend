@@ -9,6 +9,7 @@ type Post struct {
 	PostDesc   string    `json:"post_desc"`
 	ClickCount int       `json:"click_count"`
 	PostStatus string    `json:"post_status"`
+	ImageUrl   *string   `json:"image_url"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 }
