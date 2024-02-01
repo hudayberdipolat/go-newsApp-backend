@@ -24,7 +24,7 @@ func AdminRoutes(app *fiber.App) {
 	categoryRoute.Get("/:categoryID", categoryConstructor.CategoryHandler.GetOne)
 	categoryRoute.Post("/create", categoryConstructor.CategoryHandler.Create)
 	categoryRoute.Put("/:categoryID/update", categoryConstructor.CategoryHandler.Update)
-	categoryRoute.Get("/", categoryConstructor.CategoryHandler.Delete)
+	categoryRoute.Delete("/:categoryID/delete", categoryConstructor.CategoryHandler.Delete)
 
 	// tag routes
 	tagRoute := adminApiRoute.Group("/tags")

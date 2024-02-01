@@ -43,6 +43,11 @@ func (c categoryServiceImp) FindOne(categoryID int) (*dto.CategoryResponse, erro
 }
 
 func (c categoryServiceImp) CreateCategory(request dto.CreateCategoryRequest) error {
+
+	if request.CategoryStatus == "" {
+		request.CategoryStatus = "passive"
+	}
+
 	createCategory := models.Category{
 		CategoryName:   request.CategoryName,
 		CategorySlug:   slug.Make(request.CategoryName),
@@ -71,9 +76,13 @@ func (c categoryServiceImp) UpdateCategory(categoryID int, request dto.UpdateCat
 }
 
 func (c categoryServiceImp) DeleteCategory(categoryID int) error {
-	_, err := c.categoryRepo.GetOne(categoryID)
+	deleteCategory, err := c.categoryRepo.GetOne(categoryID)
 	if err != nil {
 		return errors.New("category not found")
+	}
+
+	if errDelete := c.categoryRepo.Delete(deleteCategory.ID); errDelete != nil {
+		return errDelete
 	}
 	return nil
 }

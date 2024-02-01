@@ -26,7 +26,9 @@ func (dbConfig DbConfig) GetDBConnection() (*gorm.DB, error) {
 		dbConfig.config.DBConfig.DbPort,
 		dbConfig.config.DBConfig.DbSllMode,
 	)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		TranslateError: true,
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -33,6 +34,9 @@ func (c categoryRepositoryImp) GetOne(categoryID int) (*models.Category, error) 
 
 func (c categoryRepositoryImp) Create(category models.Category) error {
 	if err := c.db.Create(&category).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu kategoriýa ady eýýäm ulanylýar!!!")
+		}
 		return err
 	}
 	return nil
@@ -41,6 +45,9 @@ func (c categoryRepositoryImp) Create(category models.Category) error {
 func (c categoryRepositoryImp) Update(categoryID int, category models.Category) error {
 	var categoryModel models.Category
 	if err := c.db.Model(&categoryModel).Where("id=?", categoryID).Updates(&category).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu kategoriýa ady eýýäm ulanylýar!!!")
+		}
 		return err
 	}
 	return nil
