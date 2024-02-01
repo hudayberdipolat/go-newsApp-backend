@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	adminConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/admins/constructor"
+	authAdminconstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/authAdmin/constructor"
 	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/categories/constructor"
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/posts/constructor"
 	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/roles/constructor"
@@ -11,6 +12,11 @@ import (
 
 func AdminRoutes(app *fiber.App) {
 	adminApiRoute := app.Group("/api/admin")
+
+	// auth Admin routes
+
+	authAdminRoute := adminApiRoute.Group("/auth")
+	authAdminRoute.Post("/login", authAdminconstructor.AuthAdminHandler.Login)
 
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")

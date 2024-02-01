@@ -47,7 +47,7 @@ func (p postServiceImp) Create(request dto.CreatePostRequest) error {
 		PostTitle:  request.PostTitle,
 		PostSlug:   slug.Make(request.PostTitle),
 		PostDesc:   request.PostDesc,
-		PostStatus: request.PostStatus,
+		PostStatus: "passive",
 		ImageUrl:   request.ImageUrl,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
