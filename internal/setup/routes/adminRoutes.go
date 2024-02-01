@@ -5,6 +5,7 @@ import (
 	adminConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/admins/constructor"
 	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/categories/constructor"
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/posts/constructor"
+	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/roles/constructor"
 	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/tags/constructor"
 )
 
@@ -42,5 +43,16 @@ func AdminRoutes(app *fiber.App) {
 	adminRoute.Post("/create", adminConstructor.AdminHandler.Create)
 	adminRoute.Put("/:adminID/update", adminConstructor.AdminHandler.Update)
 	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
+
+	// role routes
+
+	roleRoute := adminApiRoute.Group("/roles")
+	roleRoute.Get("/", roleConstructor.RoleHandler.GetAll)
+	roleRoute.Get("/:roleID", roleConstructor.RoleHandler.GetOne)
+	roleRoute.Post("/create", roleConstructor.RoleHandler.Create)
+	roleRoute.Put("/:roleID/update", roleConstructor.RoleHandler.Update)
+	roleRoute.Delete("/:roleID/delete", roleConstructor.RoleHandler.Delete)
+
+	// role permission
 
 }
