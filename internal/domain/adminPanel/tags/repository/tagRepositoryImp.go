@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -34,6 +35,10 @@ func (t tagRepositoryImp) GetOne(tagID int) (*models.Tag, error) {
 
 func (t tagRepositoryImp) Create(tag models.Tag) error {
 	if err := t.db.Create(&tag).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu tag ady eýýäm ulanylýar!!!")
+		}
+
 		return err
 	}
 	return nil
@@ -42,6 +47,10 @@ func (t tagRepositoryImp) Create(tag models.Tag) error {
 func (t tagRepositoryImp) Update(tagID int, tag models.Tag) error {
 	var updateTag models.Tag
 	if err := t.db.Model(&updateTag).Where("id=?", tagID).Updates(&tag).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu tag ady eýýäm ulanylýar!!!")
+		}
+
 		return err
 	}
 	return nil
