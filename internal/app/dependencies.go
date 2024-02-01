@@ -23,6 +23,12 @@ func GetDependencies() (*Dependencies, error) {
 	// database config
 	newDBConfig := dbConfig.NewDBConnection(getConfig)
 	db, err := newDBConfig.GetDBConnection()
+
+	//seed := seeder.NewSeeder(db)
+	//if errSeed := seed.Seeder(); errSeed != nil {
+	//	return nil, err
+	//}
+
 	if err != nil {
 		return nil, err
 	}
