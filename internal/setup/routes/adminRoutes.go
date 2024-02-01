@@ -18,6 +18,25 @@ func AdminRoutes(app *fiber.App) {
 	authAdminRoute := adminApiRoute.Group("/auth")
 	authAdminRoute.Post("/login", authAdminconstructor.AuthAdminHandler.Login)
 
+	// admin routes
+	adminRoute := adminApiRoute.Group("/admins")
+	adminRoute.Get("/", adminConstructor.AdminHandler.GetAll)
+	adminRoute.Get("/:adminID", adminConstructor.AdminHandler.GetOne)
+	adminRoute.Post("/create", adminConstructor.AdminHandler.Create)
+	adminRoute.Put("/:adminID/update", adminConstructor.AdminHandler.Update)
+	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
+
+	// role routes
+
+	roleRoute := adminApiRoute.Group("/roles")
+	roleRoute.Get("/", roleConstructor.RoleHandler.GetAll)
+	roleRoute.Get("/:roleID", roleConstructor.RoleHandler.GetOne)
+	roleRoute.Post("/create", roleConstructor.RoleHandler.Create)
+	roleRoute.Put("/:roleID/update", roleConstructor.RoleHandler.Update)
+	roleRoute.Delete("/:roleID/delete", roleConstructor.RoleHandler.Delete)
+
+	// role permission
+
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")
 	categoryRoute.Get("/", categoryConstructor.CategoryHandler.GetAll)
@@ -41,24 +60,5 @@ func AdminRoutes(app *fiber.App) {
 	postRoute.Post("/create", postConstructor.PostHandler.Create)
 	postRoute.Put("/:postID/update", postConstructor.PostHandler.Update)
 	postRoute.Delete("/:postID/delete", postConstructor.PostHandler.Delete)
-
-	// admin routes
-	adminRoute := adminApiRoute.Group("/admins")
-	adminRoute.Get("/", adminConstructor.AdminHandler.GetAll)
-	adminRoute.Get("/:adminID", adminConstructor.AdminHandler.GetOne)
-	adminRoute.Post("/create", adminConstructor.AdminHandler.Create)
-	adminRoute.Put("/:adminID/update", adminConstructor.AdminHandler.Update)
-	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
-
-	// role routes
-
-	roleRoute := adminApiRoute.Group("/roles")
-	roleRoute.Get("/", roleConstructor.RoleHandler.GetAll)
-	roleRoute.Get("/:roleID", roleConstructor.RoleHandler.GetOne)
-	roleRoute.Post("/create", roleConstructor.RoleHandler.Create)
-	roleRoute.Put("/:roleID/update", roleConstructor.RoleHandler.Update)
-	roleRoute.Delete("/:roleID/delete", roleConstructor.RoleHandler.Delete)
-
-	// role permission
 
 }

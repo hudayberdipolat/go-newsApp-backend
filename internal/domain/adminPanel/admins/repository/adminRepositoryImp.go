@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -33,6 +34,9 @@ func (a adminRepositoryImp) GetOne(adminID int) (*models.Admin, error) {
 
 func (a adminRepositoryImp) Create(admin models.Admin) error {
 	if err := a.db.Create(&admin).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu phone number eýýäm ulanylýar!!!")
+		}
 		return err
 	}
 	return nil
@@ -41,6 +45,9 @@ func (a adminRepositoryImp) Create(admin models.Admin) error {
 func (a adminRepositoryImp) Update(adminID int, admin models.Admin) error {
 	var adminModel models.Admin
 	if err := a.db.Model(&adminModel).Where("id=?", adminID).Updates(&admin).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu phone number eýýäm ulanylýar!!!")
+		}
 		return err
 	}
 	return nil
