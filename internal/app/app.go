@@ -27,5 +27,6 @@ func NewApp(dependencies *Dependencies) (httpServer *fiber.App) {
 
 	// get routes routes
 	routes.AdminRoutes(httpServer)
+	routes.FrontRoutes(httpServer)
 	return httpServer
 }

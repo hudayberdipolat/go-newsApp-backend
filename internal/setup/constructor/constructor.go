@@ -8,6 +8,7 @@ import (
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/posts/constructor"
 	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/roles/constructor"
 	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/tags/constructor"
+	userConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/front/users/constructor"
 )
 
 func Build(dependencies *app.Dependencies) {
@@ -18,4 +19,5 @@ func Build(dependencies *app.Dependencies) {
 	postConstructor.PostRequirementCreator(dependencies.DB, dependencies.Config)
 	adminConstructor.AdminRequirementCreator(dependencies.DB)
 	roleConstructor.RoleRequirementCreator(dependencies.DB)
+	userConstructor.UserRequirementCreator(dependencies.DB)
 }

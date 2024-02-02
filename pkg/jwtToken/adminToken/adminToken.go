@@ -7,7 +7,7 @@ import (
 
 type Claims struct {
 	AdminID     int    `json:"admin_id"`
-	PhoneNumber string `json:"username"`
+	PhoneNumber string `json:"phone_number"`
 	AdminRole   string `json:"admin_role"`
 	jwt.StandardClaims
 }
