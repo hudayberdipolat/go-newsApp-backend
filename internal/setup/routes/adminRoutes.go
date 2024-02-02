@@ -14,7 +14,6 @@ func AdminRoutes(app *fiber.App) {
 	adminApiRoute := app.Group("/api/admin")
 
 	// auth Admin routes
-
 	authAdminRoute := adminApiRoute.Group("/auth")
 	authAdminRoute.Post("/login", authAdminconstructor.AuthAdminHandler.Login)
 
@@ -27,15 +26,12 @@ func AdminRoutes(app *fiber.App) {
 	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
 
 	// role routes
-
 	roleRoute := adminApiRoute.Group("/roles")
 	roleRoute.Get("/", roleConstructor.RoleHandler.GetAll)
 	roleRoute.Get("/:roleID", roleConstructor.RoleHandler.GetOne)
 	roleRoute.Post("/create", roleConstructor.RoleHandler.Create)
 	roleRoute.Put("/:roleID/update", roleConstructor.RoleHandler.Update)
 	roleRoute.Delete("/:roleID/delete", roleConstructor.RoleHandler.Delete)
-
-	// role permission
 
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")

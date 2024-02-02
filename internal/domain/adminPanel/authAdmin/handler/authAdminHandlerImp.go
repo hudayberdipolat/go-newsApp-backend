@@ -35,6 +35,13 @@ func (a authAdminHandlerImp) Login(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
 
+	// phone number validate
+	validatePhoneNumber := validate.ValidatePhoneNumber(loginAdminRequest.PhoneNumber)
+	if !validatePhoneNumber {
+		errResponse := response.Error(http.StatusBadRequest, "Nädogry telefon belgi", "Nädogry telefon belgi", nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
 	loginUser, err := a.authAdminService.LoginAdmin(loginAdminRequest)
 	if err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "error login data", err.Error(), nil)

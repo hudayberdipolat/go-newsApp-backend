@@ -56,6 +56,13 @@ func (a adminHandlerImp) Create(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
 
+	// phone number validate
+	validatePhoneNumber := validate.ValidatePhoneNumber(createAdminRequest.PhoneNumber)
+	if !validatePhoneNumber {
+		errResponse := response.Error(http.StatusBadRequest, "Nädogry telefon belgi", "Nädogry telefon belgi", nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
 	if err := a.adminService.Create(createAdminRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "can't created admin", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
@@ -76,6 +83,13 @@ func (a adminHandlerImp) Update(ctx *fiber.Ctx) error {
 	// validate
 	if err := validate.ValidateStruct(updateAdminData); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
+	// phone number validate
+	validatePhoneNumber := validate.ValidatePhoneNumber(updateAdminData.PhoneNumber)
+	if !validatePhoneNumber {
+		errResponse := response.Error(http.StatusBadRequest, "Nädogry telefon belgi", "Nädogry telefon belgi", nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
 
