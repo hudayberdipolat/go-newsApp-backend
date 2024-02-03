@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS posts(
     image_url VARCHAR(255) NOT NULL,
     click_count INTEGER DEFAULT 0,
     post_status postStatus DEFAULT 'draft',
+    category_id int,
     created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_category FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE CASCADE
 );

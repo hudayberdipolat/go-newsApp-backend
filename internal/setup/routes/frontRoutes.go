@@ -19,4 +19,5 @@ func FrontRoutes(app *fiber.App) {
 	userDataRoutes.Put("/update-profile", userConstructor.UserHandler.UpdateProfile)
 	userDataRoutes.Put("/change-password", userConstructor.UserHandler.ChangePassword)
 	userDataRoutes.Delete("/delete-profile", userConstructor.UserHandler.DeleteProfile)
+
 }

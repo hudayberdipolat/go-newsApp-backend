@@ -49,6 +49,7 @@ func (p postServiceImp) Create(request dto.CreatePostRequest) error {
 		PostDesc:   request.PostDesc,
 		PostStatus: "passive",
 		ImageUrl:   request.ImageUrl,
+		CategoryID: request.CategoryID,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
@@ -69,6 +70,7 @@ func (p postServiceImp) Update(postID int, request dto.UpdatePostRequest) error 
 	updatePost.PostDesc = request.PostDesc
 	updatePost.ImageUrl = request.ImageUrl
 	updatePost.PostStatus = request.PostStatus
+	updatePost.CategoryID = request.CategoryID
 	updatePost.UpdatedAt = time.Now()
 
 	if errUpdate := p.postRepo.Update(postID, *updatePost); errUpdate != nil {
