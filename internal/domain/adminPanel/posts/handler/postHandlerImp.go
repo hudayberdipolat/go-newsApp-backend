@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/posts/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/posts/service"
-	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/response"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/validate"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/config"
@@ -61,17 +60,8 @@ func (p postHandlerImp) Create(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
 
-	//HANDLE FILE STARTED
-	path, err := utils.UploadFile(ctx, "post_image", p.config.PublicPath, "postImages")
-	if err != nil {
-		errResponse := response.Error(http.StatusBadRequest, "Error file upload", err.Error(), nil)
-		return ctx.Status(http.StatusInternalServerError).JSON(errResponse)
-	}
-	//HANDLE FILE END
-	createPostRequest.ImageUrl = path
-
 	// create post
-	if err := p.postService.Create(createPostRequest); err != nil {
+	if err := p.postService.Create(ctx, p.config, createPostRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "can't created post", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
@@ -95,30 +85,8 @@ func (p postHandlerImp) Update(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
 
-	// post update
-	// eger input-da post-image bar bolsa onda post-yn onki bar bolan suratyny ocurmeli
-	// we taze post-image upload etmeli
-	file, _ := ctx.FormFile("post_image")
-	if file != nil {
-		//old_image delete
-		if errOldImageDelete := utils.DeleteFile(updatePostRequest.OldImage); errOldImageDelete != nil {
-			errResponse := response.Error(http.StatusBadRequest, "Error not deleted old image", errOldImageDelete.Error(), nil)
-			return ctx.Status(http.StatusInternalServerError).JSON(errResponse)
-		}
-		//new image upload
-
-		path, errFileUpload := utils.UploadFile(ctx, "post_image", p.config.PublicPath, "postImages")
-		if errFileUpload != nil {
-			errResponse := response.Error(http.StatusBadRequest, "Error file upload", errFileUpload.Error(), nil)
-			return ctx.Status(http.StatusInternalServerError).JSON(errResponse)
-		}
-		updatePostRequest.ImageUrl = path
-	} else {
-		updatePostRequest.ImageUrl = &updatePostRequest.OldImage
-	}
-
 	//update post
-	if err := p.postService.Update(postID, updatePostRequest); err != nil {
+	if err := p.postService.Update(ctx, p.config, postID, updatePostRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "can't updated post", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}

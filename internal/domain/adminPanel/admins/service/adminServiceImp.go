@@ -71,20 +71,19 @@ func (a adminServiceImp) Update(adminID int, request dto.UpdateAdminRequest) err
 	updateAdmin.FullName = request.FullName
 	updateAdmin.PhoneNumber = request.PhoneNumber
 	updateAdmin.UpdatedAt = time.Now()
-	if errUpdate := a.adminRepo.Update(adminID, *updateAdmin); errUpdate != nil {
+	if errUpdate := a.adminRepo.Update(updateAdmin.ID, *updateAdmin); errUpdate != nil {
 		return errUpdate
 	}
 	return nil
 }
 
 func (a adminServiceImp) Delete(adminID int) error {
-
-	_, err := a.adminRepo.GetOne(adminID)
+	deleteAdmin, err := a.adminRepo.GetOne(adminID)
 	if err != nil {
 		return errors.New("admin not found")
 	}
 
-	if errDelete := a.adminRepo.Delete(adminID); errDelete != nil {
+	if errDelete := a.adminRepo.Delete(deleteAdmin.ID); errDelete != nil {
 		return errDelete
 	}
 	return nil
@@ -100,7 +99,7 @@ func (a adminServiceImp) ChangePassword(adminID int, changePassword dto.ChangeAd
 	if err := bcrypt.CompareHashAndPassword([]byte(getAdmin.Password), []byte(changePassword.OldPassword)); err != nil {
 		return errors.New("Köne password nädogry!!!")
 	}
-	if errPasswordChange := a.adminRepo.ChangePassword(adminID, changePassword.Password); errPasswordChange != nil {
+	if errPasswordChange := a.adminRepo.ChangePassword(getAdmin.ID, changePassword.Password); errPasswordChange != nil {
 		return err
 	}
 	return nil

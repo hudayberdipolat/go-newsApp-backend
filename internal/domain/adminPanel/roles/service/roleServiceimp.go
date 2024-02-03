@@ -56,18 +56,18 @@ func (r roleServiceImp) Update(roleID int, request dto.UpdateRoleRequest) error 
 		return errors.New("role not found")
 	}
 	updateRole.RoleName = request.RoleName
-	if errUpdate := r.roleRepo.Update(roleID, *updateRole); errUpdate != nil {
+	if errUpdate := r.roleRepo.Update(updateRole.ID, *updateRole); errUpdate != nil {
 		return errUpdate
 	}
 	return nil
 }
 
 func (r roleServiceImp) Delete(roleID int) error {
-	_, err := r.roleRepo.GetOne(roleID)
+	deleteRole, err := r.roleRepo.GetOne(roleID)
 	if err != nil {
 		return errors.New("role not found")
 	}
-	if errDelete := r.roleRepo.Delete(roleID); err != nil {
+	if errDelete := r.roleRepo.Delete(deleteRole.ID); err != nil {
 		return errDelete
 	}
 	return nil

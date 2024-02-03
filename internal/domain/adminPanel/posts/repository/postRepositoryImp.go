@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -16,26 +17,46 @@ func NewPostRepository(db *gorm.DB) PostRepository {
 }
 
 func (p postRepositoryImp) GetAll() ([]models.Post, error) {
-	//TODO implement me
-	panic("implement me")
+	var posts []models.Post
+	if err := p.db.Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return posts, nil
 }
 
 func (p postRepositoryImp) GetOne(postID int) (*models.Post, error) {
-	//TODO implement me
-	panic("implement me")
+	var post models.Post
+	if err := p.db.Where("id =?", postID).First(&post).Error; err != nil {
+		return nil, err
+	}
+	return &post, nil
 }
 
 func (p postRepositoryImp) Create(post models.Post) error {
-	//TODO implement me
-	panic("implement me")
+	if err := p.db.Create(&post).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu post Title adyny ulanyp bilmeyarsiniz!!!")
+		}
+		return err
+	}
+	return nil
 }
 
 func (p postRepositoryImp) Update(postID int, post models.Post) error {
-	//TODO implement me
-	panic("implement me")
+	var postModel models.Post
+	if err := p.db.Model(&postModel).Where("id =?", postID).Updates(&post).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Bu post Title adyny ulanyp bilmeyarsiniz!!!")
+		}
+		return err
+	}
+	return nil
 }
 
 func (p postRepositoryImp) Delete(postID int) error {
-	//TODO implement me
-	panic("implement me")
+	var post models.Post
+	if err := p.db.Where("id=?", postID).Unscoped().Delete(&post).Error; err != nil {
+		return err
+	}
+	return nil
 }
