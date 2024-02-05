@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"github.com/gosimple/slug"
-	dto2 "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/dto"
+	dto "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/repository"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"time"
@@ -19,30 +19,25 @@ func NewCategoryService(repo repository.CategoryRepository) CategoryService {
 	}
 }
 
-func (c categoryServiceImp) FindAll() ([]dto2.CategoryResponse, error) {
+func (c categoryServiceImp) FindAll() ([]dto.CategoryAllResponse, error) {
 	categories, err := c.categoryRepo.GetAll()
 	if err != nil {
 		return nil, err
 	}
-	var categoryResponses []dto2.CategoryResponse
-
-	for _, category := range categories {
-		categoryResponse := dto2.NewCategoryResponse(category)
-		categoryResponses = append(categoryResponses, categoryResponse)
-	}
+	categoryResponses := dto.NewAllCategoryResponse(categories)
 	return categoryResponses, nil
 }
 
-func (c categoryServiceImp) FindOne(categoryID int) (*dto2.CategoryResponse, error) {
+func (c categoryServiceImp) FindOne(categoryID int) (*dto.CategoryResponse, error) {
 	category, err := c.categoryRepo.GetOne(categoryID)
 	if err != nil {
 		return nil, err
 	}
-	categoryResponse := dto2.NewCategoryResponse(*category)
+	categoryResponse := dto.NewOneCategoryResponse(category)
 	return &categoryResponse, nil
 }
 
-func (c categoryServiceImp) CreateCategory(request dto2.CreateCategoryRequest) error {
+func (c categoryServiceImp) CreateCategory(request dto.CreateCategoryRequest) error {
 	if request.CategoryStatus == "" {
 		request.CategoryStatus = "passive"
 	}
@@ -58,7 +53,7 @@ func (c categoryServiceImp) CreateCategory(request dto2.CreateCategoryRequest) e
 	return nil
 }
 
-func (c categoryServiceImp) UpdateCategory(categoryID int, request dto2.UpdateCategoryRequest) error {
+func (c categoryServiceImp) UpdateCategory(categoryID int, request dto.UpdateCategoryRequest) error {
 
 	updateCategory, err := c.categoryRepo.GetOne(categoryID)
 	if err != nil {

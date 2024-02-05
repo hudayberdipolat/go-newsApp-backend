@@ -13,6 +13,7 @@ type Post struct {
 	CategoryID int       `json:"category_id"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
+	Category   Category  `json:"category"`
 }
 
 func (*Post) TableName() string {

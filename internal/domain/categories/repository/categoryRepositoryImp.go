@@ -18,7 +18,7 @@ func NewCategoryRepository(db *gorm.DB) CategoryRepository {
 
 func (c categoryRepositoryImp) GetAll() ([]models.Category, error) {
 	var categories []models.Category
-	if err := c.db.Find(&categories).Error; err != nil {
+	if err := c.db.Preload("Posts").Find(&categories).Error; err != nil {
 		return nil, err
 	}
 	return categories, nil
@@ -26,7 +26,7 @@ func (c categoryRepositoryImp) GetAll() ([]models.Category, error) {
 
 func (c categoryRepositoryImp) GetOne(categoryID int) (*models.Category, error) {
 	var category models.Category
-	if err := c.db.Where("id=?", categoryID).First(&category).Error; err != nil {
+	if err := c.db.Where("id=?", categoryID).Preload("Posts").First(&category).Error; err != nil {
 		return nil, err
 	}
 	return &category, nil
