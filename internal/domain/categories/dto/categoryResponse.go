@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 )
 
@@ -20,7 +19,33 @@ type CategoryResponse struct {
 	CategorySlug   string `json:"category_slug"`
 	CategoryStatus string `json:"category_status"`
 	CreatedAt      string `json:"created_at"`
-	Posts          []dto.PostResponse
+	Posts          []postResponse
+}
+
+type postResponse struct {
+	ID         int    `json:"id"`
+	PostTitle  string `json:"post_title"`
+	PostSlug   string `json:"post_slug"`
+	PostDesc   string `json:"post_desc"`
+	ClickCount int    `json:"click_count"`
+	PostStatus string `json:"post_status"`
+	ImageUrl   string `json:"image_url"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at"`
+}
+
+func newPostResponse(post models.Post) postResponse {
+	return postResponse{
+		ID:         post.ID,
+		PostTitle:  post.PostTitle,
+		PostSlug:   post.PostSlug,
+		PostDesc:   post.PostDesc,
+		ClickCount: post.ClickCount,
+		PostStatus: post.PostStatus,
+		ImageUrl:   *post.ImageUrl,
+		CreatedAt:  post.CreatedAt.Format("01-02-2006"),
+		UpdatedAt:  post.UpdatedAt.Format("01-02-2006"),
+	}
 }
 
 func NewAllCategoryResponse(categories []models.Category) []CategoryAllResponse {
@@ -44,10 +69,10 @@ func NewAllCategoryResponse(categories []models.Category) []CategoryAllResponse 
 }
 
 func NewOneCategoryResponse(category *models.Category) CategoryResponse {
-	var postResponses []dto.PostResponse
+	var postResponses []postResponse
 	for _, post := range category.Posts {
-		postResponse := dto.NewPostResponse(post)
-		postResponses = append(postResponses, postResponse)
+		onePostResponse := newPostResponse(post)
+		postResponses = append(postResponses, onePostResponse)
 	}
 	return CategoryResponse{
 		Id:             category.ID,

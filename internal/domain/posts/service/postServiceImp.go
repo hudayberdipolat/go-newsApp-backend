@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gosimple/slug"
-	dto2 "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/dto"
+	dto "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/repository"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils"
@@ -22,30 +22,25 @@ func NewPostService(repo repository.PostRepository) PostService {
 	}
 }
 
-func (p postServiceImp) FindAll() ([]dto2.PostResponse, error) {
+func (p postServiceImp) FindAll() ([]dto.AllPostResponse, error) {
 	posts, err := p.postRepo.GetAll()
 	if err != nil {
 		return nil, err
 	}
-	var postResponses []dto2.PostResponse
-	for _, post := range posts {
-		postResponse := dto2.NewPostResponse(post)
-		postResponses = append(postResponses, postResponse)
-	}
-	return postResponses, nil
+	allPostResponses := dto.NewAllPostResponse(posts)
+	return allPostResponses, nil
 }
 
-func (p postServiceImp) FindOne(postID int) (*dto2.PostResponse, error) {
+func (p postServiceImp) FindOne(postID int) (*dto.OnePostResponse, error) {
 	post, err := p.postRepo.GetOne(postID)
 	if err != nil {
 		return nil, err
 	}
-
-	postResponse := dto2.NewPostResponse(*post)
+	postResponse := dto.NewOnePostResponse(post)
 	return &postResponse, nil
 }
 
-func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto2.CreatePostRequest) error {
+func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto.CreatePostRequest) error {
 	// image upload
 	path, err := utils.UploadFile(ctx, "image_url", config.PublicPath, "postImages")
 	if err != nil {
@@ -74,7 +69,7 @@ func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto
 	return nil
 }
 
-func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int, request dto2.UpdatePostRequest) error {
+func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int, request dto.UpdatePostRequest) error {
 	updatePost, err := p.postRepo.GetOne(postID)
 	if err != nil {
 		return errors.New("post not found")

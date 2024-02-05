@@ -18,7 +18,7 @@ func NewPostRepository(db *gorm.DB) PostRepository {
 
 func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 	var posts []models.Post
-	if err := p.db.Find(&posts).Error; err != nil {
+	if err := p.db.Preload("Category").Find(&posts).Error; err != nil {
 		return nil, err
 	}
 	return posts, nil
@@ -26,7 +26,7 @@ func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 
 func (p postRepositoryImp) GetOne(postID int) (*models.Post, error) {
 	var post models.Post
-	if err := p.db.Where("id =?", postID).First(&post).Error; err != nil {
+	if err := p.db.Where("id =?", postID).Preload("Category").First(&post).Error; err != nil {
 		return nil, err
 	}
 	return &post, nil
