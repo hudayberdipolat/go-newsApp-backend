@@ -2,12 +2,12 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	adminConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/admins/constructor"
-	authAdminconstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/authAdmin/constructor"
-	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/categories/constructor"
-	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/posts/constructor"
-	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/roles/constructor"
-	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/adminPanel/tags/constructor"
+	adminConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/admins/constructor"
+	authAdminconstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/authAdmin/constructor"
+	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/constructor"
+	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/constructor"
+	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/roles/constructor"
+	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/tags/constructor"
 )
 
 func AdminRoutes(app *fiber.App) {
