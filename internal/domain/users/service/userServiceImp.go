@@ -71,19 +71,26 @@ func (u userServiceImp) GetUserData(userID int, phoneNumber string) (*dto.UserRe
 	return &userResponse, nil
 }
 
-func (u userServiceImp) UpdateUserData(userID int, data dto.ChangeUserData) error {
+func (u userServiceImp) UpdateUserData(userID int, data dto.ChangeUserData) (*dto.AuthUserResponse, error) {
 	updateUser, err := u.userRepo.GetUserByID(userID)
 	if err != nil {
-		return errors.New("can't updated user Data")
+		return nil, errors.New("can't updated user Data")
 	}
 	updateUser.FullName = data.FullName
 	updateUser.PhoneNumber = data.PhoneNumber
 	updateUser.UpdatedAt = time.Now()
 
 	if errUpdate := u.userRepo.Update(userID, *updateUser); errUpdate != nil {
-		return errUpdate
+		return nil, errUpdate
 	}
-	return nil
+
+	getUser, err := u.userRepo.GetUserByPhoneNumber(updateUser.PhoneNumber)
+	if err != nil {
+		return nil, err
+	}
+	accessToken, err := userToken.GenerateUserToken(getUser.ID, getUser.PhoneNumber, getUser.UserStatus)
+	userResponse := dto.NewAuthUserResponse(getUser, accessToken)
+	return &userResponse, nil
 }
 
 func (u userServiceImp) UpdateUserPassword(userID int, password dto.ChangeUserPassword) error {

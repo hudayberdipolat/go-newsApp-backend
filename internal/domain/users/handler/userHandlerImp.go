@@ -118,12 +118,12 @@ func (u userHandlerImp) UpdateProfile(ctx *fiber.Ctx) error {
 	}
 
 	// update user Data
-
-	if err := u.userService.UpdateUserData(userID, updateUserRequest); err != nil {
+	userResponse, err := u.userService.UpdateUserData(userID, updateUserRequest)
+	if err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "user can't updated", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
-	successResponse := response.Success(http.StatusOK, "user updated successfully", nil)
+	successResponse := response.Success(http.StatusOK, "user updated successfully", userResponse)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
 
