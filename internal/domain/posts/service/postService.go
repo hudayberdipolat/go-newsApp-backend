@@ -12,4 +12,5 @@ type PostService interface {
 	Create(ctx *fiber.Ctx, config config.Config, request dto.CreatePostRequest) error
 	Update(ctx *fiber.Ctx, config config.Config, postID int, request dto.UpdatePostRequest) error
 	Delete(postID int) error
+	CreateTagForPost(createPostTag dto.CreateTagForPost) error
 }

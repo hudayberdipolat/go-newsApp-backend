@@ -14,6 +14,17 @@ type Post struct {
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	Category   Category  `json:"category"`
+	PostTags   []Tag     `json:"post_tags" gorm:"many2many:post_tags;"`
+}
+
+type PostTag struct {
+	ID     int `json:"id"`
+	PostID int `json:"post_id"`
+	TagID  int `json:"tag_id"`
+}
+
+func (*PostTag) TableName() string {
+	return "post_tags"
 }
 
 func (*Post) TableName() string {

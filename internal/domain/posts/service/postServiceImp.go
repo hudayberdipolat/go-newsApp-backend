@@ -33,6 +33,7 @@ func (p postServiceImp) FindAll() ([]dto.AllPostResponse, error) {
 
 func (p postServiceImp) FindOne(postID int) (*dto.OnePostResponse, error) {
 	post, err := p.postRepo.GetOne(postID)
+
 	if err != nil {
 		return nil, err
 	}
@@ -116,6 +117,25 @@ func (p postServiceImp) Delete(postID int) error {
 	}
 	if errDelete := p.postRepo.Delete(deletePost.ID); errDelete != nil {
 		return errDelete
+	}
+	return nil
+}
+
+func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) error {
+	getPost, err := p.postRepo.GetOne(createPostTag.PostID)
+	if err != nil {
+		return errors.New("post not found")
+	}
+	getTag, errTag := p.postRepo.GetOneTag(createPostTag.TagID)
+	if errTag != nil {
+		return errors.New("tag not found")
+	}
+	tagForPost := models.PostTag{
+		PostID: getPost.ID,
+		TagID:  getTag.ID,
+	}
+	if errCreateTagForPost := p.postRepo.CreateTagForPost(tagForPost); errCreateTagForPost != nil {
+		return errCreateTagForPost
 	}
 	return nil
 }

@@ -57,4 +57,8 @@ func AdminRoutes(app *fiber.App) {
 	postRoute.Put("/:postID/update", postConstructor.PostHandler.Update)
 	postRoute.Delete("/:postID/delete", postConstructor.PostHandler.Delete)
 
+	// add tag for post
+
+	postRoute.Post("/:postID/tags/create", postConstructor.PostHandler.AddTagForPost)
+
 }

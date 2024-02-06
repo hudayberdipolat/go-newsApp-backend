@@ -72,8 +72,8 @@ func (p postHandlerImp) Create(ctx *fiber.Ctx) error {
 func (p postHandlerImp) Update(ctx *fiber.Ctx) error {
 	postID, _ := strconv.Atoi(ctx.Params("postID"))
 	var updatePostRequest dto.UpdatePostRequest
-	// body parser
 
+	// body parser
 	if err := ctx.BodyParser(&updatePostRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "body parser error", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
@@ -102,5 +102,32 @@ func (p postHandlerImp) Delete(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
 	successResponse := response.Success(http.StatusOK, "post deleted successfully", nil)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}
+
+func (p postHandlerImp) AddTagForPost(ctx *fiber.Ctx) error {
+	var postTagForPostRequest dto.CreateTagForPost
+	postID, _ := strconv.Atoi(ctx.Params("postID"))
+	// body parser
+	if err := ctx.BodyParser(&postTagForPostRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "body parser error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
+	// validate
+	if err := validate.ValidateStruct(&postTagForPostRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
+	postTag := dto.CreateTagForPost{
+		PostID: postID,
+		TagID:  postTagForPostRequest.TagID,
+	}
+	if err := p.postService.CreateTagForPost(postTag); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "something wrong", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "post tag created successfully", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }

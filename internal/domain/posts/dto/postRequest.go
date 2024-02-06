@@ -15,3 +15,8 @@ type UpdatePostRequest struct {
 	PostStatus string  `json:"post_status" form:"post_status" validate:"required,omitempty"`
 	CategoryID int     `json:"category_id" form:"category_id" validate:"required" `
 }
+
+type CreateTagForPost struct {
+	PostID int `json:"post_id"`
+	TagID  int `json:"tag_id" validate:"required"`
+}

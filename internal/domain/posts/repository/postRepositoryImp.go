@@ -21,12 +21,14 @@ func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 	if err := p.db.Preload("Category").Find(&posts).Error; err != nil {
 		return nil, err
 	}
+
 	return posts, nil
 }
 
 func (p postRepositoryImp) GetOne(postID int) (*models.Post, error) {
 	var post models.Post
-	if err := p.db.Where("id =?", postID).Preload("Category").First(&post).Error; err != nil {
+	err := p.db.Preload("Category").Preload("PostTags").First(&post, postID).Error
+	if err != nil {
 		return nil, err
 	}
 	return &post, nil
@@ -56,6 +58,22 @@ func (p postRepositoryImp) Update(postID int, post models.Post) error {
 func (p postRepositoryImp) Delete(postID int) error {
 	var post models.Post
 	if err := p.db.Where("id=?", postID).Unscoped().Delete(&post).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p postRepositoryImp) GetOneTag(tagID int) (*models.Tag, error) {
+	var tag models.Tag
+	if err := p.db.Where("id=?", tagID).First(&tag).Error; err != nil {
+		return nil, err
+	}
+	return &tag, nil
+}
+
+func (p postRepositoryImp) CreateTagForPost(postTag models.PostTag) error {
+	err := p.db.Where("post_id = ?", postTag.PostID).Where("tag_id=?", postTag.TagID).FirstOrCreate(&postTag).Error
+	if err != nil {
 		return err
 	}
 	return nil

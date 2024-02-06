@@ -8,4 +8,6 @@ type PostRepository interface {
 	Create(post models.Post) error
 	Update(postID int, post models.Post) error
 	Delete(postID int) error
+	GetOneTag(tagID int) (*models.Tag, error)
+	CreateTagForPost(postTag models.PostTag) error
 }
