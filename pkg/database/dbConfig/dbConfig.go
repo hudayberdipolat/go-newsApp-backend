@@ -30,6 +30,7 @@ func (dbConfig DbConfig) GetDBConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		TranslateError: true,
 	})
+
 	if err != nil {
 		return nil, err
 	}

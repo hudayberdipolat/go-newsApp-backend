@@ -6,8 +6,8 @@ import (
 	authAdminconstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/authAdmin/constructor"
 	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/constructor"
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/constructor"
-	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/roles/constructor"
 	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/tags/constructor"
+	"github.com/hudayberdipolat/go-newsApp-backend/internal/middleware"
 )
 
 func AdminRoutes(app *fiber.App) {
@@ -19,22 +19,16 @@ func AdminRoutes(app *fiber.App) {
 
 	// admin routes
 	adminRoute := adminApiRoute.Group("/admins")
+	adminRoute.Use(middleware.SuperAdminMiddleware)
 	adminRoute.Get("/", adminConstructor.AdminHandler.GetAll)
 	adminRoute.Get("/:adminID", adminConstructor.AdminHandler.GetOne)
 	adminRoute.Post("/create", adminConstructor.AdminHandler.Create)
 	adminRoute.Put("/:adminID/update", adminConstructor.AdminHandler.Update)
 	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
 
-	// role routes
-	roleRoute := adminApiRoute.Group("/roles")
-	roleRoute.Get("/", roleConstructor.RoleHandler.GetAll)
-	roleRoute.Get("/:roleID", roleConstructor.RoleHandler.GetOne)
-	roleRoute.Post("/create", roleConstructor.RoleHandler.Create)
-	roleRoute.Put("/:roleID/update", roleConstructor.RoleHandler.Update)
-	roleRoute.Delete("/:roleID/delete", roleConstructor.RoleHandler.Delete)
-
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")
+	categoryRoute.Use(middleware.AdminMiddleware)
 	categoryRoute.Get("/", categoryConstructor.CategoryHandler.GetAll)
 	categoryRoute.Get("/:categoryID", categoryConstructor.CategoryHandler.GetOne)
 	categoryRoute.Post("/create", categoryConstructor.CategoryHandler.Create)
@@ -43,6 +37,7 @@ func AdminRoutes(app *fiber.App) {
 
 	// tag routes
 	tagRoute := adminApiRoute.Group("/tags")
+	categoryRoute.Use(middleware.AdminMiddleware)
 	tagRoute.Get("/", tagConstructor.TagHandler.GetAll)
 	tagRoute.Get("/:tagID", tagConstructor.TagHandler.GetOne)
 	tagRoute.Post("/create", tagConstructor.TagHandler.Create)
@@ -51,14 +46,13 @@ func AdminRoutes(app *fiber.App) {
 
 	// post routes
 	postRoute := adminApiRoute.Group("/posts")
+	categoryRoute.Use(middleware.AdminMiddleware)
 	postRoute.Get("/", postConstructor.PostHandler.GetAll)
 	postRoute.Get("/:postID", postConstructor.PostHandler.GetOne)
 	postRoute.Post("/create", postConstructor.PostHandler.Create)
 	postRoute.Put("/:postID/update", postConstructor.PostHandler.Update)
 	postRoute.Delete("/:postID/delete", postConstructor.PostHandler.Delete)
-
 	// add tag for post
-
 	postRoute.Post("/:postID/tags/create", postConstructor.PostHandler.AddTagForPost)
 
 }

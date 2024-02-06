@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	userConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/constructor"
+	"github.com/hudayberdipolat/go-newsApp-backend/internal/middleware"
 )
 
 func FrontRoutes(app *fiber.App) {
@@ -14,7 +15,9 @@ func FrontRoutes(app *fiber.App) {
 	userAuthRoute.Post("/login", userConstructor.UserHandler.Login)
 
 	// user data Routes
+
 	userDataRoutes := frontApiRoute.Group("/user-profile")
+	userDataRoutes.Use(middleware.UserMiddleware)
 	userDataRoutes.Get("/", userConstructor.UserHandler.GetProfileData)
 	userDataRoutes.Put("/update-profile", userConstructor.UserHandler.UpdateProfile)
 	userDataRoutes.Put("/change-password", userConstructor.UserHandler.ChangePassword)

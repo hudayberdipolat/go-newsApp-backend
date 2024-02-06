@@ -12,7 +12,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-var SecretKey = []byte("das#jd!ahDjSwr$we$ry$wbw_we^t*&^$%^#$sa)adEd&$sda")
+var SecretAdminKey = []byte("das#jd!ahDjSwr$we$ry$wbw_we^t*&^$%^#$sa)adEd&$sda")
 
 func GenerateAdminToken(adminID int, phoneNumber, adminRole string) (string, error) {
 	claims := Claims{
@@ -27,7 +27,7 @@ func GenerateAdminToken(adminID int, phoneNumber, adminRole string) (string, err
 
 	// create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(SecretKey)
+	tokenString, err := token.SignedString(SecretAdminKey)
 	if err != nil {
 		return "", err
 	}

@@ -27,6 +27,7 @@ func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 
 func (p postRepositoryImp) GetOne(postID int) (*models.Post, error) {
 	var post models.Post
+
 	err := p.db.Preload("Category").Preload("PostTags").First(&post, postID).Error
 	if err != nil {
 		return nil, err

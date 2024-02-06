@@ -86,7 +86,6 @@ func (u userHandlerImp) Login(ctx *fiber.Ctx) error {
 func (u userHandlerImp) GetProfileData(ctx *fiber.Ctx) error {
 	userID := ctx.Locals("user_id").(int)
 	phoneNumber := ctx.Locals("phone_number").(string)
-
 	userResponse, err := u.userService.GetUserData(userID, phoneNumber)
 	if err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "user not found", err.Error(), nil)

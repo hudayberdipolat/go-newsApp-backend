@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	dto2 "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/dto"
+	dto "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/repository"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/jwtToken/userToken"
@@ -20,7 +20,7 @@ func NewUserService(repo repository.UserRepository) UserService {
 	}
 }
 
-func (u userServiceImp) RegisterUser(request dto2.RegisterUserRequest) (*dto2.UserResponse, error) {
+func (u userServiceImp) RegisterUser(request dto.RegisterUserRequest) (*dto.AuthUserResponse, error) {
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	user := models.User{
 		FullName:    request.FullName,
@@ -39,11 +39,11 @@ func (u userServiceImp) RegisterUser(request dto2.RegisterUserRequest) (*dto2.Us
 	if err != nil {
 		return nil, err
 	}
-	userResponse := dto2.NewUserResponse(*getUser, accessToken)
+	userResponse := dto.NewAuthUserResponse(getUser, accessToken)
 	return &userResponse, nil
 }
 
-func (u userServiceImp) LoginUser(request dto2.LoginUserRequest) (*dto2.UserResponse, error) {
+func (u userServiceImp) LoginUser(request dto.LoginUserRequest) (*dto.AuthUserResponse, error) {
 	getUser, err := u.userRepo.GetUserByPhoneNumber(request.PhoneNumber)
 	if err != nil {
 		return nil, errors.New("Phone number ya-da password nädogry!!!")
@@ -58,20 +58,20 @@ func (u userServiceImp) LoginUser(request dto2.LoginUserRequest) (*dto2.UserResp
 	if err != nil {
 		return nil, err
 	}
-	userResponse := dto2.NewUserResponse(*getUser, accessToken)
+	userResponse := dto.NewAuthUserResponse(getUser, accessToken)
 	return &userResponse, nil
 }
 
-func (u userServiceImp) GetUserData(userID int, phoneNumber string) (*dto2.UserResponse, error) {
+func (u userServiceImp) GetUserData(userID int, phoneNumber string) (*dto.UserResponse, error) {
 	getUser, err := u.userRepo.GetUserData(userID, phoneNumber)
 	if err != nil {
 		return nil, err
 	}
-	userResponse := dto2.NewUserResponse(*getUser, "")
+	userResponse := dto.NewUserResponse(getUser)
 	return &userResponse, nil
 }
 
-func (u userServiceImp) UpdateUserData(userID int, data dto2.ChangeUserData) error {
+func (u userServiceImp) UpdateUserData(userID int, data dto.ChangeUserData) error {
 	updateUser, err := u.userRepo.GetUserByID(userID)
 	if err != nil {
 		return errors.New("can't updated user Data")
@@ -86,7 +86,7 @@ func (u userServiceImp) UpdateUserData(userID int, data dto2.ChangeUserData) err
 	return nil
 }
 
-func (u userServiceImp) UpdateUserPassword(userID int, password dto2.ChangeUserPassword) error {
+func (u userServiceImp) UpdateUserPassword(userID int, password dto.ChangeUserPassword) error {
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(password.Password), bcrypt.DefaultCost)
 	strPassword := string(hashPassword)
 	if err := u.userRepo.ChangeUserPassword(userID, strPassword); err != nil {

@@ -6,7 +6,6 @@ import (
 	authAdminconstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/authAdmin/constructor"
 	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/constructor"
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/constructor"
-	roleConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/roles/constructor"
 	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/tags/constructor"
 	userConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/constructor"
 )
@@ -18,6 +17,5 @@ func Build(dependencies *app.Dependencies) {
 	tagConstructor.TagRequirementCreator(dependencies.DB)
 	postConstructor.PostRequirementCreator(dependencies.DB, dependencies.Config)
 	adminConstructor.AdminRequirementCreator(dependencies.DB)
-	roleConstructor.RoleRequirementCreator(dependencies.DB)
 	userConstructor.UserRequirementCreator(dependencies.DB)
 }
