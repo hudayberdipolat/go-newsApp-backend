@@ -15,4 +15,5 @@ type UserService interface {
 	// functions for admin panel
 
 	GetAllUsers() ([]dto.GetAllUsersResponse, error)
+	GetOneUser(userID int) (*dto.GetUserResponse, error)
 }

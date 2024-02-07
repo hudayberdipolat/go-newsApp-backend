@@ -32,6 +32,7 @@ func AdminRoutes(app *fiber.App) {
 	userRoutes := adminApiRoute.Group("/users")
 	userRoutes.Use(middleware.SuperAdminMiddleware)
 	userRoutes.Get("/", userConstructor.UserHandler.GetAllUsers)
+	userRoutes.Get("/:userID", userConstructor.UserHandler.GetOneUser)
 
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")

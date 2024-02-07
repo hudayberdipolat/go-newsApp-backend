@@ -98,3 +98,14 @@ func (u userRepositoryImp) GetAllUsers() ([]models.User, error) {
 	}
 	return users, nil
 }
+
+func (u userRepositoryImp) GetOneUser(userID int) (*models.User, error) {
+	var user models.User
+	if err := u.db.First(&user, userID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("User not found")
+		}
+		return nil, err
+	}
+	return &user, nil
+}

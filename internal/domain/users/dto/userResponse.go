@@ -93,7 +93,7 @@ type userWroteComment struct {
 	UserWroteComment string  `json:"user_wrote_comment"`
 }
 
-func NewGetUserResponse(user models.User) GetUserResponse {
+func NewGetUserResponse(user *models.User) GetUserResponse {
 	return GetUserResponse{
 		ID:               user.ID,
 		FullName:         user.FullName,

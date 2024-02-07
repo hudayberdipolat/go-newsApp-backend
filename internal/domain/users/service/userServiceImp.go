@@ -124,5 +124,15 @@ func (u userServiceImp) GetAllUsers() ([]dto.GetAllUsersResponse, error) {
 	}
 
 	getAllUsersResponses := dto.NewGetAllUsersResponse(users)
+
 	return getAllUsersResponses, nil
+}
+
+func (u userServiceImp) GetOneUser(userID int) (*dto.GetUserResponse, error) {
+	user, err := u.userRepo.GetOneUser(userID)
+	if err != nil {
+		return nil, err
+	}
+	userResponse := dto.NewGetUserResponse(user)
+	return &userResponse, nil
 }

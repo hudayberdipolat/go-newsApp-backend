@@ -12,4 +12,5 @@ type UserHandler interface {
 
 	// functions for admin panel
 	GetAllUsers(ctx *fiber.Ctx) error
+	GetOneUser(ctx *fiber.Ctx) error
 }

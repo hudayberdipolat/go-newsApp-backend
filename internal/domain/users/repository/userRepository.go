@@ -13,4 +13,5 @@ type UserRepository interface {
 
 	// function for admin panel
 	GetAllUsers() ([]models.User, error)
+	GetOneUser(userID int) (*models.User, error)
 }
