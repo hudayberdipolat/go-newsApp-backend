@@ -22,3 +22,7 @@ type ChangeUserPassword struct {
 	Password        string `json:"password" validate:"required,min=5"`
 	ConfirmPassword string `json:"confirm_password" validate:"required,eqfield=Password"`
 }
+
+type UpdateUserStatusRequest struct {
+	UserStatus string `json:"user_status" validate:"required"`
+}

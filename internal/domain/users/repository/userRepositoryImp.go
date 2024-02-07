@@ -109,3 +109,10 @@ func (u userRepositoryImp) GetOneUser(userID int) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+func (u userRepositoryImp) UpdateUserStatus(userID int, user models.User) error {
+	if err := u.db.Model(models.User{}).Where(userID).Updates(user).Error; err != nil {
+		return err
+	}
+	return nil
+}

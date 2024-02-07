@@ -16,4 +16,5 @@ type UserService interface {
 
 	GetAllUsers() ([]dto.GetAllUsersResponse, error)
 	GetOneUser(userID int) (*dto.GetUserResponse, error)
+	UpdateUserStatus(userID int, request dto.UpdateUserStatusRequest) error
 }

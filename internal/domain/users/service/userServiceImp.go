@@ -136,3 +136,15 @@ func (u userServiceImp) GetOneUser(userID int) (*dto.GetUserResponse, error) {
 	userResponse := dto.NewGetUserResponse(user)
 	return &userResponse, nil
 }
+
+func (u userServiceImp) UpdateUserStatus(userID int, request dto.UpdateUserStatusRequest) error {
+	updateUser, err := u.userRepo.GetOneUser(userID)
+	if err != nil {
+		return errors.New("user not found")
+	}
+	updateUser.UserStatus = request.UserStatus
+	if errUpdate := u.userRepo.UpdateUserStatus(updateUser.ID, *updateUser); err != nil {
+		return errUpdate
+	}
+	return nil
+}

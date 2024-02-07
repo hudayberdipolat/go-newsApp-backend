@@ -28,11 +28,11 @@ func AdminRoutes(app *fiber.App) {
 	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
 
 	// functions for user
-
 	userRoutes := adminApiRoute.Group("/users")
 	userRoutes.Use(middleware.SuperAdminMiddleware)
 	userRoutes.Get("/", userConstructor.UserHandler.GetAllUsers)
 	userRoutes.Get("/:userID", userConstructor.UserHandler.GetOneUser)
+	userRoutes.Put("/:userID/update-status", userConstructor.UserHandler.UpdateUserStatus)
 
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")

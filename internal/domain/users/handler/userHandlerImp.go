@@ -184,3 +184,28 @@ func (u userHandlerImp) GetOneUser(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "get  user data", userResponse)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+func (u userHandlerImp) UpdateUserStatus(ctx *fiber.Ctx) error {
+	var updateUserStatusRequest dto.UpdateUserStatusRequest
+	userID, _ := strconv.Atoi(ctx.Params("userID"))
+	// body parser
+	if err := ctx.BodyParser(&updateUserStatusRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "body parser error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
+	// validate
+	if err := validate.ValidateStruct(updateUserStatusRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
+	// update user status
+
+	if err := u.userService.UpdateUserStatus(userID, updateUserStatusRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "can't updated user status", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "updated successfully user status", nil)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}
