@@ -13,4 +13,5 @@ type CategoryService interface {
 
 	// functions for frontend
 	GetAllCategories() ([]dto.GetAllCategoriesResponse, error)
+	GetOneCategory(categorySlug string) (*dto.GetCategoryResponse, error)
 }

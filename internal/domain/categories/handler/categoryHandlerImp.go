@@ -113,3 +113,14 @@ func (c categoryHandlerImp) GetAllCategories(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "get all categories", allCategories)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+func (c categoryHandlerImp) GetOneCategory(ctx *fiber.Ctx) error {
+	categorySlug := ctx.Params("categorySlug")
+	getCategory, err := c.categoryService.GetOneCategory(categorySlug)
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "get one category error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get one category", getCategory)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}

@@ -12,4 +12,5 @@ type CategoryRepository interface {
 	// functions for frontend
 
 	GetAllCategories() ([]models.Category, error)
+	GetOneCategory(categorySlug string) (*models.Category, error)
 }

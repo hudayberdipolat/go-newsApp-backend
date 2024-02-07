@@ -12,4 +12,5 @@ type CategoryHandler interface {
 	// functions for frontend
 
 	GetAllCategories(ctx *fiber.Ctx) error
+	GetOneCategory(ctx *fiber.Ctx) error
 }

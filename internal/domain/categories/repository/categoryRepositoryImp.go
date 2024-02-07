@@ -71,3 +71,16 @@ func (c categoryRepositoryImp) GetAllCategories() ([]models.Category, error) {
 	}
 	return categories, nil
 }
+
+func (c categoryRepositoryImp) GetOneCategory(categorySlug string) (*models.Category, error) {
+	var category models.Category
+	categoryStatus := "active"
+	if err := c.db.Select("id", "category_name", "category_slug").Where("category_status=?", categoryStatus).Where("category_slug=?",
+		categorySlug).Preload("Posts").First(&category).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("category not found")
+		}
+		return nil, err
+	}
+	return &category, nil
+}

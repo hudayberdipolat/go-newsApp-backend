@@ -35,7 +35,7 @@ func FrontRoutes(app *fiber.App) {
 
 	categories := frontApiRoute.Group("/categories")
 	categories.Get("/", categoryConstructor.CategoryHandler.GetAllCategories)
-	//categories.Get("/:categoryID", categoryConstructor.CategoryHandler.GetOneCategory)
+	categories.Get("/:categorySlug", categoryConstructor.CategoryHandler.GetOneCategory)
 
 	// posts
 

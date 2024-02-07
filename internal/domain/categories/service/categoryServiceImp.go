@@ -89,3 +89,12 @@ func (c categoryServiceImp) GetAllCategories() ([]dto.GetAllCategoriesResponse, 
 	getAllCategoryResponses := dto.NewGetAllCategoriesResponse(categories)
 	return getAllCategoryResponses, nil
 }
+
+func (c categoryServiceImp) GetOneCategory(categorySlug string) (*dto.GetCategoryResponse, error) {
+	category, err := c.categoryRepo.GetOneCategory(categorySlug)
+	if err != nil {
+		return nil, err
+	}
+	categoryResponse := dto.NewGetCategoryResponse(category)
+	return &categoryResponse, nil
+}
