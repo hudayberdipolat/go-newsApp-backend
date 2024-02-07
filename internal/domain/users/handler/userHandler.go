@@ -9,4 +9,7 @@ type UserHandler interface {
 	UpdateProfile(ctx *fiber.Ctx) error
 	ChangePassword(ctx *fiber.Ctx) error
 	DeleteProfile(ctx *fiber.Ctx) error
+
+	// functions for admin panel
+	GetAllUsers(ctx *fiber.Ctx) error
 }

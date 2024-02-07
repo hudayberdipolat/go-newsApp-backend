@@ -10,4 +10,7 @@ type UserRepository interface {
 	Update(userID int, user models.User) error
 	Delete(userID int, phoneNumber string) error
 	ChangeUserPassword(userID int, password string) error
+
+	// function for admin panel
+	GetAllUsers() ([]models.User, error)
 }

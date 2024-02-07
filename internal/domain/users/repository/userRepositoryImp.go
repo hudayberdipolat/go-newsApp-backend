@@ -88,3 +88,13 @@ func (u userRepositoryImp) ChangeUserPassword(userID int, password string) error
 	}
 	return nil
 }
+
+// functions for admin panel
+
+func (u userRepositoryImp) GetAllUsers() ([]models.User, error) {
+	var users []models.User
+	if err := u.db.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}

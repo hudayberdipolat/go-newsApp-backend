@@ -7,6 +7,7 @@ import (
 	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/constructor"
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/constructor"
 	tagConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/tags/constructor"
+	userConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/constructor"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/middleware"
 )
 
@@ -25,6 +26,12 @@ func AdminRoutes(app *fiber.App) {
 	adminRoute.Post("/create", adminConstructor.AdminHandler.Create)
 	adminRoute.Put("/:adminID/update", adminConstructor.AdminHandler.Update)
 	adminRoute.Delete("/:adminID/delete", adminConstructor.AdminHandler.Delete)
+
+	// functions for user
+
+	userRoutes := adminApiRoute.Group("/users")
+	userRoutes.Use(middleware.SuperAdminMiddleware)
+	userRoutes.Get("/", userConstructor.UserHandler.GetAllUsers)
 
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")

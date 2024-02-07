@@ -6,7 +6,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/response"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/jwtToken/adminToken"
-	"log"
 	"net/http"
 )
 
@@ -25,7 +24,6 @@ func SuperAdminMiddleware(ctx *fiber.Ctx) error {
 	ctx.Locals("user_id", claims.AdminID)
 	ctx.Locals("admin_role", claims.AdminRole)
 	role := ctx.Locals("admin_role")
-	log.Println(role)
 	if role != "super_admin" {
 		return fmt.Errorf("Permission denied")
 	}

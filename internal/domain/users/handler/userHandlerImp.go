@@ -162,3 +162,13 @@ func (u userHandlerImp) DeleteProfile(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "Account deleted successfully ", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+func (u userHandlerImp) GetAllUsers(ctx *fiber.Ctx) error {
+	userResponses, err := u.userService.GetAllUsers()
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "get users error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get all users data", userResponses)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}

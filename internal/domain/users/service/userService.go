@@ -11,4 +11,8 @@ type UserService interface {
 	UpdateUserData(userID int, data dto.ChangeUserData) (*dto.AuthUserResponse, error)
 	UpdateUserPassword(userID int, password dto.ChangeUserPassword) error
 	DeleteUser(userID int, phoneNumber string) error
+
+	// functions for admin panel
+
+	GetAllUsers() ([]dto.GetAllUsersResponse, error)
 }

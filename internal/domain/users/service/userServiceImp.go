@@ -116,3 +116,13 @@ func (u userServiceImp) DeleteUser(userID int, phoneNumber string) error {
 	}
 	return nil
 }
+
+func (u userServiceImp) GetAllUsers() ([]dto.GetAllUsersResponse, error) {
+	users, err := u.userRepo.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	getAllUsersResponses := dto.NewGetAllUsersResponse(users)
+	return getAllUsersResponses, nil
+}
