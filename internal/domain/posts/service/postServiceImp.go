@@ -139,3 +139,28 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 	}
 	return nil
 }
+
+func (p postServiceImp) AddLikePost(userID, postID int) error {
+	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly
+	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
+	likePost := models.UserLikedPost{
+		UserID: userID,
+		PostID: postID,
+	}
+	if err := p.postRepo.AddLikePost(likePost); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p postServiceImp) AddCommentPost(postID, userID int, addComment dto.AddCommentPostRequest) error {
+	addPostComment := models.UserCommentPost{
+		PostID:      postID,
+		UserID:      userID,
+		PostComment: addComment.PostComment,
+	}
+	if err := p.postRepo.AddCommentPost(addPostComment); err != nil {
+		return err
+	}
+	return nil
+}

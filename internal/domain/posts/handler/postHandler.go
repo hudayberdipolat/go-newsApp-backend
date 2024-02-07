@@ -9,4 +9,6 @@ type PostHandler interface {
 	Update(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 	AddTagForPost(ctx *fiber.Ctx) error
+	AddUserLikeOfPost(ctx *fiber.Ctx) error
+	AddComment(ctx *fiber.Ctx) error
 }

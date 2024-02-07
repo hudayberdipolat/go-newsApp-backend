@@ -20,3 +20,7 @@ type CreateTagForPost struct {
 	PostID int `json:"post_id"`
 	TagID  int `json:"tag_id" validate:"required"`
 }
+
+type AddCommentPostRequest struct {
+	PostComment string `json:"post_comment" json:"post_comment"`
+}

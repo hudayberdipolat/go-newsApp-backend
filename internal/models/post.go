@@ -23,6 +23,27 @@ type PostTag struct {
 	TagID  int `json:"tag_id"`
 }
 
+type UserLikedPost struct {
+	ID     int `json:"id"`
+	UserID int `json:"user_id"`
+	PostID int `json:"post_id"`
+}
+
+func (*UserLikedPost) TableName() string {
+	return "user_liked_post"
+}
+
+type UserCommentPost struct {
+	ID          int    `json:"id"`
+	PostID      int    `json:"post_id"`
+	UserID      int    `json:"user_id"`
+	PostComment string `json:"post_comment"`
+}
+
+func (*UserCommentPost) TableName() string {
+	return "user_comment_post"
+}
+
 func (*PostTag) TableName() string {
 	return "post_tags"
 }

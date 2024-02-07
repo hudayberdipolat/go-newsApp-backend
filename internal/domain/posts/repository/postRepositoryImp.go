@@ -79,3 +79,17 @@ func (p postRepositoryImp) CreateTagForPost(postTag models.PostTag) error {
 	}
 	return nil
 }
+
+func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
+	if err := p.db.Create(&likePost).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) error {
+	if err := p.db.Create(&addComment).Error; err != nil {
+		return err
+	}
+	return nil
+}

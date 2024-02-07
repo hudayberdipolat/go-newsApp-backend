@@ -131,3 +131,35 @@ func (p postHandlerImp) AddTagForPost(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "post tag created successfully", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+func (p postHandlerImp) AddUserLikeOfPost(ctx *fiber.Ctx) error {
+	postID, _ := strconv.Atoi(ctx.Params("postID"))
+	userID := ctx.Locals("user_id").(int)
+	if err := p.postService.AddLikePost(userID, postID); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "something wrong", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "Thank you for like!!!", nil)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}
+
+func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
+	postID, _ := strconv.Atoi(ctx.Params("postID"))
+	userID := ctx.Locals("user_id").(int)
+	var addCommentRequest dto.AddCommentPostRequest
+	if err := ctx.BodyParser(&addCommentRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "body parser error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	// validate
+	if err := validate.ValidateStruct(&addCommentRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	if err := p.postService.AddCommentPost(userID, postID, addCommentRequest); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "sorry something wrong", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "Thank you for comment!!!", nil)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}

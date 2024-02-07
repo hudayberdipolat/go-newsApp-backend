@@ -10,4 +10,6 @@ type PostRepository interface {
 	Delete(postID int) error
 	GetOneTag(tagID int) (*models.Tag, error)
 	CreateTagForPost(postTag models.PostTag) error
+	AddLikePost(likePost models.UserLikedPost) error
+	AddCommentPost(addComment models.UserCommentPost) error
 }
