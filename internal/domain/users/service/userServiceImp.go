@@ -54,6 +54,10 @@ func (u userServiceImp) LoginUser(request dto.LoginUserRequest) (*dto.AuthUserRe
 		return nil, errors.New("Phone number ya-da password nädogry!!!")
 	}
 
+	// user status check
+	if getUser.UserStatus != "active" {
+		return nil, errors.New("Siziň profiliňiz admin tarapyndan bloklanan! Acmak ucin admin-e yüz tutup bilersiňiz!")
+	}
 	accessToken, err := userToken.GenerateUserToken(getUser.ID, getUser.PhoneNumber, getUser.UserStatus)
 	if err != nil {
 		return nil, err

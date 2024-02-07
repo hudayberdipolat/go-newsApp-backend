@@ -27,19 +27,21 @@ func FrontRoutes(app *fiber.App) {
 	userDataRoutes.Post("/addPostLike", postConstructor.PostHandler.AddUserLikeOfPost)
 	userDataRoutes.Post("/addComment", postConstructor.PostHandler.AddComment)
 
-	//1. user like goyan postlaryny gorup bilmeli ---> GET method
-	//3. user comment yazan postlaryny gorup bilmeli ---> GET method
+	//userDataRoutes.Get("/user-like-post", postConstructor.PostHandler.GetAllLikePostOfUser)
+	//userDataRoutes.Get("/user-comment-post", postConstructor.PostHandler.GetAllCommentOfUser)
 
-	//front ucin public api
-	//
 	// categories
-	//
-	//1. get All categories
-	//2. get one category with posts
-	//
-	//
+
+	//categories := frontApiRoute.Group("/categories")
+	//categories.Get("/", categoryConstructor.CategoryHandler.GetAllCategories)
+	//categories.Get("/:categoryID", categoryConstructor.CategoryHandler.GetOneCategory)
+
 	// posts
-	//
+
+	//posts := frontApiRoute.Group("/posts")
+	//posts.Get("/", postConstructor.PostHandler.GetAllPosts)
+	//posts.Get("/", postConstructor.PostHandler.GetOnePost)
+
 	//1. get all posts (id postTitle, postSlug, createdAt, postImage, ClickCount, like count )  with category name
 	//2. get one post with comments, tags, category name
 
