@@ -78,3 +78,14 @@ func (c categoryServiceImp) DeleteCategory(categoryID int) error {
 	}
 	return nil
 }
+
+// functions for frontend
+
+func (c categoryServiceImp) GetAllCategories() ([]dto.GetAllCategoriesResponse, error) {
+	categories, err := c.categoryRepo.GetAllCategories()
+	if err != nil {
+		return nil, err
+	}
+	getAllCategoryResponses := dto.NewGetAllCategoriesResponse(categories)
+	return getAllCategoryResponses, nil
+}

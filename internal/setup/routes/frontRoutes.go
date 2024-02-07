@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	categoryConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/constructor"
 	postConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/constructor"
 	userConstructor "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/constructor"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/middleware"
@@ -32,8 +33,8 @@ func FrontRoutes(app *fiber.App) {
 
 	// categories
 
-	//categories := frontApiRoute.Group("/categories")
-	//categories.Get("/", categoryConstructor.CategoryHandler.GetAllCategories)
+	categories := frontApiRoute.Group("/categories")
+	categories.Get("/", categoryConstructor.CategoryHandler.GetAllCategories)
 	//categories.Get("/:categoryID", categoryConstructor.CategoryHandler.GetOneCategory)
 
 	// posts

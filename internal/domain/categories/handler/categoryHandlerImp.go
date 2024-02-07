@@ -101,3 +101,15 @@ func (c categoryHandlerImp) Delete(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "category deleted successfully", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+// functions for frontend
+
+func (c categoryHandlerImp) GetAllCategories(ctx *fiber.Ctx) error {
+	allCategories, err := c.categoryService.GetAllCategories()
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "get all category error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get all categories", allCategories)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}

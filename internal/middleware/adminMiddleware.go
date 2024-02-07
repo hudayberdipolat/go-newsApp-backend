@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/response"
-	"log"
 	"net/http"
 )
 
@@ -23,7 +22,6 @@ func AdminMiddleware(ctx *fiber.Ctx) error {
 	ctx.Locals("user_id", claims.AdminID)
 	ctx.Locals("admin_role", claims.AdminRole)
 	role := ctx.Locals("admin_role")
-	log.Println(role)
 	if role == "super_admin" || role == "admin" {
 		return ctx.Next()
 	}

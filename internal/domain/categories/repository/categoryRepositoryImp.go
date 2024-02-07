@@ -60,3 +60,14 @@ func (c categoryRepositoryImp) Delete(categoryID int) error {
 	}
 	return nil
 }
+
+// functions for frontend
+
+func (c categoryRepositoryImp) GetAllCategories() ([]models.Category, error) {
+	var categories []models.Category
+	categoryStatus := "active"
+	if err := c.db.Where("category_status=?", categoryStatus).Preload("Posts").Find(&categories).Error; err != nil {
+		return nil, err
+	}
+	return categories, nil
+}

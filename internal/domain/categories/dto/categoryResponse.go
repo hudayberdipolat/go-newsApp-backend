@@ -13,6 +13,26 @@ type CategoryAllResponse struct {
 	PostCount      int    `json:"post_count"`
 }
 
+func NewAllCategoryResponse(categories []models.Category) []CategoryAllResponse {
+	var categoryAllResponses []CategoryAllResponse
+	for _, category := range categories {
+		postCount := 0
+		for i := 0; i < len(category.Posts); i++ {
+			postCount = postCount + 1
+		}
+		categoryAllResponse := CategoryAllResponse{
+			Id:             category.ID,
+			CategoryName:   category.CategoryName,
+			CategorySlug:   category.CategorySlug,
+			CategoryStatus: category.CategoryStatus,
+			CreatedAt:      category.CreatedAt.Format("01-02-2006"),
+			PostCount:      postCount,
+		}
+		categoryAllResponses = append(categoryAllResponses, categoryAllResponse)
+	}
+	return categoryAllResponses
+}
+
 type CategoryResponse struct {
 	Id             int    `json:"id"`
 	CategoryName   string `json:"category_name"`
@@ -20,6 +40,22 @@ type CategoryResponse struct {
 	CategoryStatus string `json:"category_status"`
 	CreatedAt      string `json:"created_at"`
 	Posts          []postResponse
+}
+
+func NewOneCategoryResponse(category *models.Category) CategoryResponse {
+	var postResponses []postResponse
+	for _, post := range category.Posts {
+		onePostResponse := newPostResponse(post)
+		postResponses = append(postResponses, onePostResponse)
+	}
+	return CategoryResponse{
+		Id:             category.ID,
+		CategoryName:   category.CategoryName,
+		CategorySlug:   category.CategorySlug,
+		CategoryStatus: category.CategoryStatus,
+		CreatedAt:      category.CreatedAt.Format("01-02-2006"),
+		Posts:          postResponses,
+	}
 }
 
 type postResponse struct {
@@ -48,38 +84,27 @@ func newPostResponse(post models.Post) postResponse {
 	}
 }
 
-func NewAllCategoryResponse(categories []models.Category) []CategoryAllResponse {
-	var categoryAllResponses []CategoryAllResponse
+type GetAllCategoriesResponse struct {
+	Id           int    `json:"id"`
+	CategoryName string `json:"category_name"`
+	CategorySlug string `json:"category_slug"`
+	PostCount    int    `json:"post_count"`
+}
+
+func NewGetAllCategoriesResponse(categories []models.Category) []GetAllCategoriesResponse {
+	var getAllCategories []GetAllCategoriesResponse
 	for _, category := range categories {
 		postCount := 0
 		for i := 0; i < len(category.Posts); i++ {
 			postCount = postCount + 1
 		}
-		categoryAllResponse := CategoryAllResponse{
-			Id:             category.ID,
-			CategoryName:   category.CategoryName,
-			CategorySlug:   category.CategorySlug,
-			CategoryStatus: category.CategoryStatus,
-			CreatedAt:      category.CreatedAt.Format("01-02-2006"),
-			PostCount:      postCount,
+		categoryResponse := GetAllCategoriesResponse{
+			Id:           category.ID,
+			CategoryName: category.CategoryName,
+			CategorySlug: category.CategorySlug,
+			PostCount:    postCount,
 		}
-		categoryAllResponses = append(categoryAllResponses, categoryAllResponse)
+		getAllCategories = append(getAllCategories, categoryResponse)
 	}
-	return categoryAllResponses
-}
-
-func NewOneCategoryResponse(category *models.Category) CategoryResponse {
-	var postResponses []postResponse
-	for _, post := range category.Posts {
-		onePostResponse := newPostResponse(post)
-		postResponses = append(postResponses, onePostResponse)
-	}
-	return CategoryResponse{
-		Id:             category.ID,
-		CategoryName:   category.CategoryName,
-		CategorySlug:   category.CategorySlug,
-		CategoryStatus: category.CategoryStatus,
-		CreatedAt:      category.CreatedAt.Format("01-02-2006"),
-		Posts:          postResponses,
-	}
+	return getAllCategories
 }
