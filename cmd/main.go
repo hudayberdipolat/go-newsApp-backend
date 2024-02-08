@@ -16,6 +16,7 @@ func main() {
 	appRouter := app.NewApp(getDependencies)
 	runServer := fmt.Sprintf("%s:%s", getDependencies.Config.HttpConfig.ServerHost,
 		getDependencies.Config.HttpConfig.ServerPort)
+
 	if errRunServer := appRouter.Listen(runServer); errRunServer != nil {
 		log.Fatal("run server error", errRunServer.Error())
 	}

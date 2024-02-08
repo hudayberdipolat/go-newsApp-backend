@@ -17,8 +17,10 @@ func NewAllCategoryResponse(categories []models.Category) []CategoryAllResponse 
 	var categoryAllResponses []CategoryAllResponse
 	for _, category := range categories {
 		postCount := 0
-		for i := 0; i < len(category.Posts); i++ {
-			postCount = postCount + 1
+		if len(category.Posts) != 0 {
+			for i := 0; i < len(category.Posts); i++ {
+				postCount = postCount + 1
+			}
 		}
 		categoryAllResponse := CategoryAllResponse{
 			Id:             category.ID,
@@ -44,9 +46,11 @@ type CategoryResponse struct {
 
 func NewOneCategoryResponse(category *models.Category) CategoryResponse {
 	var postResponses []postResponse
-	for _, post := range category.Posts {
-		onePostResponse := newPostResponse(post)
-		postResponses = append(postResponses, onePostResponse)
+	if len(category.Posts) != 0 {
+		for _, post := range category.Posts {
+			onePostResponse := newPostResponse(post)
+			postResponses = append(postResponses, onePostResponse)
+		}
 	}
 	return CategoryResponse{
 		Id:             category.ID,
@@ -99,8 +103,10 @@ func NewGetAllCategoriesResponse(categories []models.Category) []GetAllCategorie
 	var getAllCategories []GetAllCategoriesResponse
 	for _, category := range categories {
 		postCount := 0
-		for i := 0; i < len(category.Posts); i++ {
-			postCount = postCount + 1
+		if len(category.Posts) != 0 {
+			for i := 0; i < len(category.Posts); i++ {
+				postCount = postCount + 1
+			}
 		}
 		categoryResponse := GetAllCategoriesResponse{
 			Id:           category.ID,
@@ -127,6 +133,7 @@ type getPostResponse struct {
 
 func newGetPostResponse(post models.Post) getPostResponse {
 	return getPostResponse{
+		ID:         post.ID,
 		PostTitle:  post.PostTitle,
 		PostSlug:   post.PostSlug,
 		PostDesc:   post.PostDesc,
@@ -145,9 +152,11 @@ type GetCategoryResponse struct {
 
 func NewGetCategoryResponse(category *models.Category) GetCategoryResponse {
 	var postResponses []getPostResponse
-	for _, post := range category.Posts {
-		onePostResponse := newGetPostResponse(post)
-		postResponses = append(postResponses, onePostResponse)
+	if len(category.Posts) != 0 {
+		for _, post := range category.Posts {
+			onePostResponse := newGetPostResponse(post)
+			postResponses = append(postResponses, onePostResponse)
+		}
 	}
 	return GetCategoryResponse{
 		Id:           category.ID,
