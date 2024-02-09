@@ -170,10 +170,25 @@ func (p postServiceImp) AddCommentPost(postID, userID int, addComment dto.AddCom
 	return nil
 }
 
+// get all posts service
+
 func (p postServiceImp) GetAllPosts() ([]dto.GetAllPostsResponse, error) {
-	panic("get all posts")
+	posts, err := p.postRepo.GetAllPosts()
+	if err != nil {
+		return nil, err
+	}
+
+	allPostsResponse := dto.NewGetAllPostsResponse(posts)
+	return allPostsResponse, err
 }
 
-func (p postServiceImp) GetOnePost(postSlug string) (*dto.GetAllPostsResponse, error) {
-	panic("get all posts")
+// get one post  service
+
+func (p postServiceImp) GetOnePost(postSlug string) (*dto.GetOnePostResponse, error) {
+	post, err := p.postRepo.GetOnePost(postSlug)
+	if err != nil {
+		return nil, err
+	}
+	postResponse := dto.NewGetOnePostResponse(post)
+	return &postResponse, nil
 }

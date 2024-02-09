@@ -96,9 +96,23 @@ func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) err
 }
 
 func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
-	panic("getAllPost")
+	var allPosts []models.Post
+	activeStatus := "active"
+	if err := p.db.Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
+		Where("post_status=?", activeStatus).Preload("Category", "category_status=?", activeStatus).Find(&allPosts).Error; err != nil {
+		return nil, err
+	}
+
+	return allPosts, nil
+
 }
 
 func (p postRepositoryImp) GetOnePost(postSlug string) (*models.Post, error) {
-	panic("getOnePost")
+	var post models.Post
+	activeStatus := "active"
+	if err := p.db.Where("post_status=?", activeStatus).Where("post_slug=?", postSlug).
+		Preload("Category").Preload("PostTags").First(&post).Error; err != nil {
+		return nil, err
+	}
+	return &post, nil
 }

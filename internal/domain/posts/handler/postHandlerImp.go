@@ -184,9 +184,23 @@ func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
 }
 
 func (p postHandlerImp) GetAllPosts(ctx *fiber.Ctx) error {
-	panic("get all posts")
+	allPosts, err := p.postService.GetAllPosts()
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "not found posts", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get All Posts", allPosts)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
 
 func (p postHandlerImp) GetOnePost(ctx *fiber.Ctx) error {
-	panic("get one post")
+	postSlug := ctx.Params("postSlug")
+
+	post, err := p.postService.GetOnePost(postSlug)
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "not found post", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get one post", post)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
 }

@@ -17,7 +17,7 @@ type PostService interface {
 	// functions for frontend
 
 	GetAllPosts() ([]dto.GetAllPostsResponse, error)
-	GetOnePost(postSlug string) (*dto.GetAllPostsResponse, error)
+	GetOnePost(postSlug string) (*dto.GetOnePostResponse, error)
 	AddLikePost(userID, postID int) error
 	AddCommentPost(postID, userID int, addComment dto.AddCommentPostRequest) error
 }

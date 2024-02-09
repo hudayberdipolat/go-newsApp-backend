@@ -39,9 +39,9 @@ func FrontRoutes(app *fiber.App) {
 
 	// posts
 
-	//posts := frontApiRoute.Group("/posts")
-	//posts.Get("/", postConstructor.PostHandler.GetAllPosts)
-	//posts.Get("/", postConstructor.PostHandler.GetOnePost)
+	posts := frontApiRoute.Group("/posts")
+	posts.Get("/", postConstructor.PostHandler.GetAllPosts)
+	posts.Get("/:postSlug", postConstructor.PostHandler.GetOnePost)
 
 	//1. get all posts (id postTitle, postSlug, createdAt, postImage, ClickCount, like count )  with category name
 	//2. get one post with comments, tags, category name
