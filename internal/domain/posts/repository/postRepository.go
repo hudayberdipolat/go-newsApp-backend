@@ -9,6 +9,11 @@ type PostRepository interface {
 	Update(postID int, post models.Post) error
 	Delete(postID int) error
 	GetOneTag(tagID int) (*models.Tag, error)
+
+	// functions for frontend
+
+	GetAllPosts() ([]models.Post, error)
+	GetOnePost(postSlug string) (*models.Post, error)
 	CreateTagForPost(postTag models.PostTag) error
 	AddLikePost(likePost models.UserLikedPost) error
 	AddCommentPost(addComment models.UserCommentPost) error

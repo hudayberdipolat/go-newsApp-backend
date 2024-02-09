@@ -101,3 +101,21 @@ type postTagResponse struct {
 	Id      int    `json:"id"`
 	TagName string `json:"tag_name"`
 }
+
+// frontend for responses
+
+type GetAllPostsResponse struct {
+}
+
+type GetOnePostResponse struct {
+}
+
+func NewGetAllPostsResponse(posts []models.Post) []GetAllPostsResponse {
+	var allPostResponses []GetAllPostsResponse
+
+	return allPostResponses
+}
+
+func NewGetOnePostResponse(posts *models.Post) GetOnePostResponse {
+	return GetOnePostResponse{}
+}

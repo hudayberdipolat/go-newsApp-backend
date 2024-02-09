@@ -24,6 +24,10 @@ func NewPostHandler(service service.PostService, conf config.Config) PostHandler
 	}
 }
 
+// functions for admin panel
+
+// get all posts
+
 func (p postHandlerImp) GetAll(ctx *fiber.Ctx) error {
 	posts, err := p.postService.FindAll()
 	if err != nil {
@@ -33,6 +37,8 @@ func (p postHandlerImp) GetAll(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "get all posts", posts)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+// get one post
 
 func (p postHandlerImp) GetOne(ctx *fiber.Ctx) error {
 	postID, _ := strconv.Atoi(ctx.Params("postID"))
@@ -45,6 +51,8 @@ func (p postHandlerImp) GetOne(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 
 }
+
+// create post
 
 func (p postHandlerImp) Create(ctx *fiber.Ctx) error {
 	var createPostRequest dto.CreatePostRequest
@@ -69,6 +77,8 @@ func (p postHandlerImp) Create(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "post created successfully", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+// update post
 
 func (p postHandlerImp) Update(ctx *fiber.Ctx) error {
 	postID, _ := strconv.Atoi(ctx.Params("postID"))
@@ -95,6 +105,8 @@ func (p postHandlerImp) Update(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
 
+// delete post
+
 func (p postHandlerImp) Delete(ctx *fiber.Ctx) error {
 	postID, _ := strconv.Atoi(ctx.Params("postID"))
 
@@ -105,6 +117,8 @@ func (p postHandlerImp) Delete(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "post deleted successfully", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+// functions for add tag in post
 
 func (p postHandlerImp) AddTagForPost(ctx *fiber.Ctx) error {
 	var postTagForPostRequest dto.CreateTagForPost
@@ -132,6 +146,10 @@ func (p postHandlerImp) AddTagForPost(ctx *fiber.Ctx) error {
 	successResponse := response.Success(http.StatusOK, "post tag created successfully", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
+
+// functions for admin panel end
+
+// functions for frontend
 
 func (p postHandlerImp) AddUserLikeOfPost(ctx *fiber.Ctx) error {
 	postID, _ := strconv.Atoi(ctx.Params("postID"))
@@ -163,4 +181,12 @@ func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
 	}
 	successResponse := response.Success(http.StatusOK, "Thank you for comment!!!", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
+}
+
+func (p postHandlerImp) GetAllPosts(ctx *fiber.Ctx) error {
+	panic("get all posts")
+}
+
+func (p postHandlerImp) GetOnePost(ctx *fiber.Ctx) error {
+	panic("get one post")
 }

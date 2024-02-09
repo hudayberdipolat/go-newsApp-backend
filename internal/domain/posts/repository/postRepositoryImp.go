@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -92,4 +93,12 @@ func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) err
 		return err
 	}
 	return nil
+}
+
+func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
+	panic("getAllPost")
+}
+
+func (p postRepositoryImp) GetOnePost(postSlug string) (*models.Post, error) {
+	panic("getOnePost")
 }

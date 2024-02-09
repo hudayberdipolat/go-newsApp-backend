@@ -143,6 +143,8 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 	return nil
 }
 
+// functions for frontend
+
 func (p postServiceImp) AddLikePost(userID, postID int) error {
 	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly
 	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
@@ -166,4 +168,12 @@ func (p postServiceImp) AddCommentPost(postID, userID int, addComment dto.AddCom
 		return err
 	}
 	return nil
+}
+
+func (p postServiceImp) GetAllPosts() ([]dto.GetAllPostsResponse, error) {
+	panic("get all posts")
+}
+
+func (p postServiceImp) GetOnePost(postSlug string) (*dto.GetAllPostsResponse, error) {
+	panic("get all posts")
 }
