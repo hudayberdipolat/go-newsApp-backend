@@ -2,7 +2,7 @@ package repository
 
 import (
 	"errors"
-	"fmt"
+
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
 )
@@ -75,28 +75,33 @@ func (c categoryRepositoryImp) GetAllCategories() ([]models.Category, error) {
 
 func (c categoryRepositoryImp) GetOneCategory(categorySlug string) (*models.Category, error) {
 	var category models.Category
-	categoryStatus := "active"
-	if err := c.db.Select("id", "category_name", "category_slug").Where("category_status=?", categoryStatus).Where("category_slug=?",
-		categorySlug).Preload("Posts", func() {
+	activeStatus := "active"
 
-	}).First(&category).Error; err != nil {
+	if err := c.db.Table("categories").
+		Select("categories.id, categories.category_name, categories.category_slug").
+		Where("category_status = ?", activeStatus).
+		Where("category_slug = ?", categorySlug).
+		Preload("Posts", "post_status = ?", activeStatus).
+		First(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("category not found")
 		}
 		return nil, err
 	}
 
-	//sqlQuery := `select categories.ID, categories.category_name, categories.category_slug, posts.id, posts.post_title, posts.post_slug
-	//				from categories
-	//			left join posts on categories.id = posts.category_id
-	//			where categories.category_status=? and  categories.category_slug=?`
-	//if err := c.db.Raw(sqlQuery, categoryStatus, categorySlug).Scan(&category).Error; err != nil {
-	//	return nil, err
-	//}
-
-	for _, post := range category.Posts {
-		fmt.Printf("post-id  :%d  post_desc :%s \n", post.ID, post)
-	}
+	// if err := c.db.Table("categories").
+	// 	Select("categories.id, categories.category_name, categories.category_slug").
+	// 	Joins("LEFT JOIN posts ON categories.id = posts.category_id").
+	// 	Where("categories.category_status = ?", activeStatus).
+	// 	Where("categories.category_slug = ?", categorySlug).
+	// 	Where("posts.post_status = ?", activeStatus).
+	// 	Select("posts.id, posts.post_title, posts.post_slug").
+	// 	First(&category).Error; err != nil {
+	// 	if errors.Is(err, gorm.ErrRecordNotFound) {
+	// 		return nil, errors.New("category not found")
+	// 	}
+	// 	return nil, err
+	// }
 
 	return &category, nil
 }

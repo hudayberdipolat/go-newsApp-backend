@@ -2,6 +2,9 @@ package service
 
 import (
 	"errors"
+	"log"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gosimple/slug"
 	dto "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/dto"
@@ -9,7 +12,6 @@ import (
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/config"
-	"time"
 )
 
 type postServiceImp struct {
@@ -80,6 +82,7 @@ func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int,
 	if file != nil {
 		//old_image delete
 		if errOldImageDelete := utils.DeleteFile(*updatePost.ImageUrl); errOldImageDelete != nil {
+			log.Println(errOldImageDelete.Error())
 			return errOldImageDelete
 		}
 		//new image upload
