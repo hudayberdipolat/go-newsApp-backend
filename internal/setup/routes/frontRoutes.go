@@ -42,6 +42,11 @@ func FrontRoutes(app *fiber.App) {
 	posts := frontApiRoute.Group("/posts")
 	posts.Get("/", postConstructor.PostHandler.GetAllPosts)
 	posts.Get("/:postSlug", postConstructor.PostHandler.GetOnePost)
+	// comment yazmak we like goymak ucin user hokmany suratda ulgama giren bolmaly
+
+	posts.Use(middleware.UserMiddleware)
+	posts.Post("/:postSlug/add-comment", postConstructor.PostHandler.AddComment)
+	posts.Post("/:postSlug/add-like", postConstructor.PostHandler.AddUserLikeOfPost)
 
 	//1. get all posts (id postTitle, postSlug, createdAt, postImage, ClickCount, like count )  with category name
 	//2. get one post with comments, tags, category name

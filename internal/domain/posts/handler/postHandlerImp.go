@@ -163,8 +163,11 @@ func (p postHandlerImp) AddUserLikeOfPost(ctx *fiber.Ctx) error {
 }
 
 func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
-	postID, _ := strconv.Atoi(ctx.Params("postID"))
+
+	// eger-de user comment yazjak bolsa onda post_slug bilen request-de gelyan
+	// post_id select edilende post den bolmaly we sona gora select etdirmeli
 	userID := ctx.Locals("user_id").(int)
+	postSlug := ctx.Params("postSlug")
 	var addCommentRequest dto.AddCommentPostRequest
 	if err := ctx.BodyParser(&addCommentRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "body parser error", err.Error(), nil)
@@ -175,7 +178,7 @@ func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
 		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
-	if err := p.postService.AddCommentPost(userID, postID, addCommentRequest); err != nil {
+	if err := p.postService.AddCommentPost(userID, postSlug, addCommentRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "sorry something wrong", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}

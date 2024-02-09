@@ -65,6 +65,7 @@ func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
+	log.Println(createPost)
 
 	if err := p.postRepo.Create(createPost); err != nil {
 		return err
@@ -158,11 +159,21 @@ func (p postServiceImp) AddLikePost(userID, postID int) error {
 	return nil
 }
 
-func (p postServiceImp) AddCommentPost(postID, userID int, addComment dto.AddCommentPostRequest) error {
+// user write comment post
+
+func (p postServiceImp) AddCommentPost(userID int, postSlug string, addComment dto.AddCommentPostRequest) error {
+
+	// get post for write comment
+	getPost, err := p.postRepo.GetPostWithIDAndPostSlug(addComment.PostID, postSlug)
+	if err != nil {
+		return errors.New("something wrong!!!")
+	}
+
 	addPostComment := models.UserCommentPost{
-		PostID:      postID,
+		PostID:      getPost.ID,
 		UserID:      userID,
 		PostComment: addComment.PostComment,
+		CreatedAt:   time.Now(),
 	}
 	if err := p.postRepo.AddCommentPost(addPostComment); err != nil {
 		return err

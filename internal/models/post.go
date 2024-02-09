@@ -34,10 +34,13 @@ func (*UserLikedPost) TableName() string {
 }
 
 type UserCommentPost struct {
-	ID          int    `json:"id"`
-	PostID      int    `json:"post_id"`
-	UserID      int    `json:"user_id"`
-	PostComment string `json:"post_comment"`
+	ID          int       `json:"id"`
+	PostID      int       `json:"post_id"`
+	UserID      int       `json:"user_id"`
+	PostComment string    `json:"post_comment" gorm:"column:user_comment"`
+	CreatedAt   time.Time `json:"created_at"`
+	User        User      `json:"user"`
+	Post        Post      `json:"post"`
 }
 
 func (*UserCommentPost) TableName() string {

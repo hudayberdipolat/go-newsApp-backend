@@ -19,5 +19,5 @@ type PostService interface {
 	GetAllPosts() ([]dto.GetAllPostsResponse, error)
 	GetOnePost(postSlug string) (*dto.GetOnePostResponse, error)
 	AddLikePost(userID, postID int) error
-	AddCommentPost(postID, userID int, addComment dto.AddCommentPostRequest) error
+	AddCommentPost(userID int, postSlug string, addComment dto.AddCommentPostRequest) error
 }

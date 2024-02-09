@@ -95,6 +95,15 @@ func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) err
 	return nil
 }
 
+func (p postRepositoryImp) GetPostWithIDAndPostSlug(postID int, postSlug string) (*models.Post, error) {
+	var post models.Post
+	if err := p.db.Select("id").Where("post_slug=?", postSlug).Where("id=?", postID).First(&post).Error; err != nil {
+		return nil, err
+	}
+
+	return &post, nil
+}
+
 func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 	var allPosts []models.Post
 	activeStatus := "active"
