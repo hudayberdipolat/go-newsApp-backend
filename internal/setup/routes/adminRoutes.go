@@ -54,7 +54,7 @@ func AdminRoutes(app *fiber.App) {
 
 	// post routes
 	postRoute := adminApiRoute.Group("/posts")
-	categoryRoute.Use(middleware.AdminMiddleware)
+	postRoute.Use(middleware.AdminMiddleware)
 	postRoute.Get("/", postConstructor.PostHandler.GetAll)
 	postRoute.Get("/:postID", postConstructor.PostHandler.GetOne)
 	postRoute.Post("/create", postConstructor.PostHandler.Create)

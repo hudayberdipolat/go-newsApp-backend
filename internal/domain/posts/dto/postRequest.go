@@ -25,3 +25,8 @@ type AddCommentPostRequest struct {
 	PostID      int    `json:"post_id" validate:"required"`
 	PostComment string `json:"post_comment" validate:"required"`
 }
+
+type AddLike struct {
+	PostID   int    `json:"post_id" validate:"required"`
+	LikeType string `json:"like_type" validate:"required"`
+}

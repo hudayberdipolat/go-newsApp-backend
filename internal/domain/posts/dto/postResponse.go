@@ -16,17 +16,18 @@ type AllPostResponse struct {
 	CreatedAt    string               `json:"created_at"`
 	UpdatedAt    string               `json:"updated_at"`
 	PostCategory postCategoryResponse `json:"post_category"`
-	TagCount     int                  `json:"tag_count" `
+	TagCount     int                  `json:"tag_count"`
 }
 
 func NewAllPostResponse(posts []models.Post) []AllPostResponse {
 	var allPostResponses []AllPostResponse
+
 	tagCount := 0
 	for _, post := range posts {
-
 		for i := 0; i < len(post.PostTags); i++ {
 			tagCount = tagCount + 1
 		}
+
 		postResponse := AllPostResponse{
 			ID:         post.ID,
 			PostTitle:  post.PostTitle,
@@ -105,6 +106,8 @@ type postTagResponse struct {
 	TagName string `json:"tag_name"`
 }
 
+////////////////////////////
+//------------------------
 // frontend for responses
 
 type GetAllPostsResponse struct {
@@ -115,18 +118,6 @@ type GetAllPostsResponse struct {
 	ImageUrl     *string              `json:"image_url"`
 	CreatedAt    string               `json:"created_at"`
 	PostCategory postCategoryResponse `json:"post_category"`
-}
-
-type GetOnePostResponse struct {
-	ID           int                  `json:"id"`
-	PostTitle    string               `json:"post_title"`
-	PostSlug     string               `json:"post_slug"`
-	PostDesc     string               `json:"post_desc"`
-	ClickCount   int                  `json:"click_count"`
-	ImageUrl     *string              `json:"image_url"`
-	CreatedAt    string               `json:"created_at"`
-	PostCategory postCategoryResponse `json:"post_category"`
-	PostTags     []postTagResponse    `json:"post_tags"`
 }
 
 func NewGetAllPostsResponse(posts []models.Post) []GetAllPostsResponse {
@@ -149,6 +140,18 @@ func NewGetAllPostsResponse(posts []models.Post) []GetAllPostsResponse {
 		allPostResponses = append(allPostResponses, getPostResponse)
 	}
 	return allPostResponses
+}
+
+type GetOnePostResponse struct {
+	ID           int                  `json:"id"`
+	PostTitle    string               `json:"post_title"`
+	PostSlug     string               `json:"post_slug"`
+	PostDesc     string               `json:"post_desc"`
+	ClickCount   int                  `json:"click_count"`
+	ImageUrl     *string              `json:"image_url"`
+	CreatedAt    string               `json:"created_at"`
+	PostCategory postCategoryResponse `json:"post_category"`
+	PostTags     []postTagResponse    `json:"post_tags"`
 }
 
 func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {

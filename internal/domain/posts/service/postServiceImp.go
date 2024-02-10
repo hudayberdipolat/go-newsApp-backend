@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -65,7 +64,6 @@ func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
-	log.Println(createPost)
 
 	if err := p.postRepo.Create(createPost); err != nil {
 		return err
@@ -83,7 +81,6 @@ func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int,
 	if file != nil {
 		//old_image delete
 		if errOldImageDelete := utils.DeleteFile(*updatePost.ImageUrl); errOldImageDelete != nil {
-			log.Println(errOldImageDelete.Error())
 			return errOldImageDelete
 		}
 		//new image upload
@@ -146,13 +143,25 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 
 // functions for frontend
 
-func (p postServiceImp) AddLikePost(userID, postID int) error {
+func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.AddLike) error {
 	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly
 	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
-	likePost := models.UserLikedPost{
-		UserID: userID,
-		PostID: postID,
+	// ilki posdy get etdirip almaly post id we post slug boyunca
+
+	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addLike.PostID, postSlug)
+	if err != nil {
+		return errors.New("something wrong!!!")
 	}
+
+	if postID == 0 {
+		return errors.New("something wrong!!!")
+	}
+	likePost := models.UserLikedPost{
+		UserID:   userID,
+		PostID:   postID,
+		LikeType: addLike.LikeType,
+	}
+
 	if err := p.postRepo.AddLikePost(likePost); err != nil {
 		return err
 	}
@@ -164,13 +173,17 @@ func (p postServiceImp) AddLikePost(userID, postID int) error {
 func (p postServiceImp) AddCommentPost(userID int, postSlug string, addComment dto.AddCommentPostRequest) error {
 
 	// get post for write comment
-	getPost, err := p.postRepo.GetPostWithIDAndPostSlug(addComment.PostID, postSlug)
+	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addComment.PostID, postSlug)
 	if err != nil {
 		return errors.New("something wrong!!!")
 	}
 
+	if postID == 0 {
+		return errors.New("something wrong!!!")
+	}
+
 	addPostComment := models.UserCommentPost{
-		PostID:      getPost.ID,
+		PostID:      postID,
 		UserID:      userID,
 		PostComment: addComment.PostComment,
 		CreatedAt:   time.Now(),

@@ -1,11 +1,12 @@
 package seeder
 
 import (
+	"time"
+
 	"github.com/gosimple/slug"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"time"
 )
 
 type NewSeederInterface interface {
@@ -23,28 +24,26 @@ func NewSeeder(db *gorm.DB) NewSeederInterface {
 }
 
 func (n newSeederImp) Seeder() error {
-	adminDefaultPassword, _ := bcrypt.GenerateFromPassword([]byte("12345678"), bcrypt.DefaultCost)
-	// superAdmin
-	superAdmin := models.Admin{
-		FullName:    "Hudayberdi Polatov",
-		PhoneNumber: "99365097512",
-		AdminRole:   "super_admin",
-		Password:    string(adminDefaultPassword),
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-	}
-
-	if err := n.db.Create(&superAdmin).Error; err != nil {
-		return err
-	}
+	defaultPassword, _ := bcrypt.GenerateFromPassword([]byte("12345678"), bcrypt.DefaultCost)
+	defaultStatus := "active"
 
 	// admins
 	admins := []models.Admin{
 		{
+			FullName:    "Hudayberdi Polatov",
+			PhoneNumber: "99365097512",
+			AdminRole:   "super_admin",
+			AdminStatus: defaultStatus,
+			Password:    string(defaultPassword),
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		},
+		{
 			FullName:    "Gulnara Polatova",
 			PhoneNumber: "99365021065",
 			AdminRole:   "admin",
-			Password:    string(adminDefaultPassword),
+			AdminStatus: defaultStatus,
+			Password:    string(defaultPassword),
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		},
@@ -52,7 +51,8 @@ func (n newSeederImp) Seeder() error {
 			FullName:    "Nurgeldi Polatov",
 			PhoneNumber: "99365277904",
 			AdminRole:   "admin",
-			Password:    string(adminDefaultPassword),
+			AdminStatus: defaultStatus,
+			Password:    string(defaultPassword),
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		},
@@ -64,13 +64,12 @@ func (n newSeederImp) Seeder() error {
 
 	// user
 
-	userDefaultPassword, _ := bcrypt.GenerateFromPassword([]byte("12345678"), bcrypt.DefaultCost)
 	users := []models.User{
 		{
 			FullName:    "Yrysgal Garajayew",
 			PhoneNumber: "99365010203",
 			UserStatus:  "active",
-			Password:    string(userDefaultPassword),
+			Password:    string(defaultPassword),
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		},
@@ -78,17 +77,18 @@ func (n newSeederImp) Seeder() error {
 			FullName:    "Nuryagdy Jumayew",
 			PhoneNumber: "99365777777",
 			UserStatus:  "active",
-			Password:    string(userDefaultPassword),
+			Password:    string(defaultPassword),
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		},
 	}
 
-	if err := n.db.Create(&users).Error; err != nil {
+	if err := n.db.Omit("UserCommentPost.*,UserLikedPost.*").Create(&users).Error; err != nil {
 		return err
 	}
 
 	// categories
+
 	categoryNames := []string{"sport", "ylym bilim", "medeniyet", "saglyk"}
 	var categories []models.Category
 	for _, categoryName := range categoryNames {
@@ -102,20 +102,23 @@ func (n newSeederImp) Seeder() error {
 		categories = append(categories, category)
 
 	}
+
 	if err := n.db.Create(&categories).Error; err != nil {
 		return err
 	}
 
 	// tags
-	tagNames := []string{"sport", "ylym-bilim", "medeniyet", "saglyk"}
 
+	tagNames := []string{"sport", "ylym-bilim", "medeniyet", "saglyk"}
+	var tags []models.Tag
 	for _, tagName := range tagNames {
 		tag := models.Tag{
 			TagName: tagName,
 		}
-		if err := n.db.Create(&tag).Error; err != nil {
-			return err
-		}
+		tags = append(tags, tag)
+	}
+	if err := n.db.Create(&tags).Error; err != nil {
+		return err
 	}
 	return nil
 }

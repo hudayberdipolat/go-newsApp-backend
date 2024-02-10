@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
@@ -19,10 +20,9 @@ func NewPostRepository(db *gorm.DB) PostRepository {
 
 func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 	var posts []models.Post
-	if err := p.db.Preload("Category").Find(&posts).Error; err != nil {
+	if err := p.db.Preload("Category").Preload("PostTags").Preload("Comments").Find(&posts).Error; err != nil {
 		return nil, err
 	}
-
 	return posts, nil
 }
 
@@ -83,6 +83,9 @@ func (p postRepositoryImp) CreateTagForPost(postTag models.PostTag) error {
 
 func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
 	if err := p.db.Create(&likePost).Error; err != nil {
+		if errors.Is(err, gorm.ErrForeignKeyViolated) {
+			log.Println(err)
+		}
 		return err
 	}
 	return nil
@@ -90,25 +93,25 @@ func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
 
 func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) error {
 	if err := p.db.Create(&addComment).Error; err != nil {
+
 		return err
 	}
 	return nil
 }
 
-func (p postRepositoryImp) GetPostWithIDAndPostSlug(postID int, postSlug string) (*models.Post, error) {
+func (p postRepositoryImp) GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error) {
 	var post models.Post
-	if err := p.db.Select("id").Where("post_slug=?", postSlug).Where("id=?", postID).First(&post).Error; err != nil {
-		return nil, err
+	if err := p.db.Select("posts.id").Where("post_slug=?", postSlug).Where("id=?", postID).First(&post).Error; err != nil {
+		return 0, err
 	}
-
-	return &post, nil
+	return post.ID, nil
 }
 
 func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 	var allPosts []models.Post
 	activeStatus := "active"
 	if err := p.db.Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
-		Where("post_status=?", activeStatus).Preload("Category", "category_status=?", activeStatus).Find(&allPosts).Error; err != nil {
+		Where("post_status=?", activeStatus).Preload("Category").Find(&allPosts).Error; err != nil {
 		return nil, err
 	}
 

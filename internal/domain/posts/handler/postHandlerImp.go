@@ -151,19 +151,35 @@ func (p postHandlerImp) AddTagForPost(ctx *fiber.Ctx) error {
 
 // functions for frontend
 
-func (p postHandlerImp) AddUserLikeOfPost(ctx *fiber.Ctx) error {
-	postID, _ := strconv.Atoi(ctx.Params("postID"))
-	userID := ctx.Locals("user_id").(int)
-	if err := p.postService.AddLikePost(userID, postID); err != nil {
-		errResponse := response.Error(http.StatusBadRequest, "something wrong", err.Error(), nil)
+// get all posts for front
+
+func (p postHandlerImp) GetAllPosts(ctx *fiber.Ctx) error {
+	allPosts, err := p.postService.GetAllPosts()
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "not found posts", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
-	successResponse := response.Success(http.StatusOK, "Thank you for like!!!", nil)
+	successResponse := response.Success(http.StatusOK, "get All Posts", allPosts)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
 
-func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
+// get one post for front
 
+func (p postHandlerImp) GetOnePost(ctx *fiber.Ctx) error {
+	postSlug := ctx.Params("postSlug")
+
+	post, err := p.postService.GetOnePost(postSlug)
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "not found post", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get one post", post)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}
+
+// add comment  post
+
+func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
 	// eger-de user comment yazjak bolsa onda post_slug bilen request-de gelyan
 	// post_id select edilende post den bolmaly we sona gora select etdirmeli
 	userID := ctx.Locals("user_id").(int)
@@ -186,24 +202,27 @@ func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }
 
-func (p postHandlerImp) GetAllPosts(ctx *fiber.Ctx) error {
-	allPosts, err := p.postService.GetAllPosts()
-	if err != nil {
-		errResponse := response.Error(http.StatusBadRequest, "not found posts", err.Error(), nil)
-		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
-	}
-	successResponse := response.Success(http.StatusOK, "get All Posts", allPosts)
-	return ctx.Status(http.StatusOK).JSON(successResponse)
-}
+// add like post
 
-func (p postHandlerImp) GetOnePost(ctx *fiber.Ctx) error {
+func (p postHandlerImp) AddUserLikeOfPost(ctx *fiber.Ctx) error {
+	var addLike dto.AddLike
 	postSlug := ctx.Params("postSlug")
+	userID := ctx.Locals("user_id").(int)
 
-	post, err := p.postService.GetOnePost(postSlug)
-	if err != nil {
-		errResponse := response.Error(http.StatusBadRequest, "not found post", err.Error(), nil)
+	if err := ctx.BodyParser(&addLike); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "body parser error", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
-	successResponse := response.Success(http.StatusOK, "get one post", post)
+	// validate
+	if err := validate.ValidateStruct(&addLike); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+
+	if err := p.postService.AddLikePost(userID, postSlug, addLike); err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "something wrong", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "Thank you for like!!!", nil)
 	return ctx.Status(http.StatusOK).JSON(successResponse)
 }

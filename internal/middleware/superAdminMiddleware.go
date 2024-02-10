@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/response"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/jwtToken/adminToken"
-	"net/http"
 )
 
 func SuperAdminMiddleware(ctx *fiber.Ctx) error {
@@ -30,14 +31,15 @@ func SuperAdminMiddleware(ctx *fiber.Ctx) error {
 	return ctx.Next()
 }
 
-func verifyAdminToken(tokenString string) (*adminToken.Claims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &adminToken.Claims{}, func(token *jwt.Token) (interface{}, error) {
+func verifyAdminToken(tokenString string) (*adminToken.AdminClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &adminToken.AdminClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return adminToken.SecretAdminKey, nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	if claims, ok := token.Claims.(*adminToken.Claims); ok && token.Valid {
+
+	if claims, ok := token.Claims.(*adminToken.AdminClaims); ok && token.Valid {
 		return claims, nil
 	}
 	return nil, fmt.Errorf("Invalid token")

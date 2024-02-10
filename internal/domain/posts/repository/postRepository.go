@@ -17,5 +17,5 @@ type PostRepository interface {
 	GetOnePost(postSlug string) (*models.Post, error)
 	AddLikePost(likePost models.UserLikedPost) error
 	AddCommentPost(addComment models.UserCommentPost) error
-	GetPostWithIDAndPostSlug(postID int, postSlug string) (*models.Post, error)
+	GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error)
 }
