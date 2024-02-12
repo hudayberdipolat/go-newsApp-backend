@@ -46,6 +46,10 @@ func FrontRoutes(app *fiber.App) {
 
 	posts.Use(middleware.UserMiddleware)
 	posts.Post("/:postSlug/add-comment", postConstructor.PostHandler.AddComment)
+	// egerde userin sol posda on like yada dislike goyan bolsa onda egerde like-a bassa onk bar bolan like-ni ayyrmaly
+	// egerde dislike bolsa onda userin goyyan dislikeini ayyrmaly we on like goyup sonundan hem dislike-a bassa onda onki goylan
+	// like-i ayyrmaly
+
 	posts.Post("/:postSlug/add-like", postConstructor.PostHandler.AddUserLikeOfPost)
 
 	//1. get all posts (id postTitle, postSlug, createdAt, postImage, ClickCount, like count )  with category name

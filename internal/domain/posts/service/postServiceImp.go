@@ -143,29 +143,27 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 
 // functions for frontend
 
-func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.AddLike) error {
-	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly
-	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
-	// ilki posdy get etdirip almaly post id we post slug boyunca
+// get all posts service
 
-	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addLike.PostID, postSlug)
+func (p postServiceImp) GetAllPosts() ([]dto.GetAllPostsResponse, error) {
+	posts, err := p.postRepo.GetAllPosts()
 	if err != nil {
-		return errors.New("something wrong!!!")
+		return nil, err
 	}
 
-	if postID == 0 {
-		return errors.New("something wrong!!!")
-	}
-	likePost := models.UserLikedPost{
-		UserID:   userID,
-		PostID:   postID,
-		LikeType: addLike.LikeType,
-	}
+	allPostsResponse := dto.NewGetAllPostsResponse(posts)
+	return allPostsResponse, err
+}
 
-	if err := p.postRepo.AddLikePost(likePost); err != nil {
-		return err
+// get one post  service
+
+func (p postServiceImp) GetOnePost(postSlug string) (*dto.GetOnePostResponse, error) {
+	post, err := p.postRepo.GetOnePost(postSlug)
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	postResponse := dto.NewGetOnePostResponse(post)
+	return &postResponse, nil
 }
 
 // user write comment post
@@ -194,25 +192,30 @@ func (p postServiceImp) AddCommentPost(userID int, postSlug string, addComment d
 	return nil
 }
 
-// get all posts service
+// add like or dislike for post
 
-func (p postServiceImp) GetAllPosts() ([]dto.GetAllPostsResponse, error) {
-	posts, err := p.postRepo.GetAllPosts()
+func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.AddLike) error {
+	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly yada firstORCreate function ulanylmaly
+	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
+	// ilki posdy get etdirip almaly post id we post slug boyunca
+
+	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addLike.PostID, postSlug)
 	if err != nil {
-		return nil, err
+		return errors.New("something wrong!!!")
 	}
 
-	allPostsResponse := dto.NewGetAllPostsResponse(posts)
-	return allPostsResponse, err
-}
-
-// get one post  service
-
-func (p postServiceImp) GetOnePost(postSlug string) (*dto.GetOnePostResponse, error) {
-	post, err := p.postRepo.GetOnePost(postSlug)
-	if err != nil {
-		return nil, err
+	if postID == 0 {
+		return errors.New("something wrong!!!")
 	}
-	postResponse := dto.NewGetOnePostResponse(post)
-	return &postResponse, nil
+
+	likePost := models.UserLikedPost{
+		UserID:   userID,
+		PostID:   postID,
+		LikeType: addLike.LikeType,
+	}
+
+	if err := p.postRepo.AddLikePost(likePost); err != nil {
+		return err
+	}
+	return nil
 }

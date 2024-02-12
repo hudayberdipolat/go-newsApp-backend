@@ -152,6 +152,19 @@ type GetOnePostResponse struct {
 	CreatedAt    string               `json:"created_at"`
 	PostCategory postCategoryResponse `json:"post_category"`
 	PostTags     []postTagResponse    `json:"post_tags"`
+	PostComments []postComment        `json:"post_comments"`
+	PostLikes    []postLike           `json:"post_likes"`
+}
+
+type postLike struct {
+	Like    string `json:"like"`
+	Dislike string `json:"dislike"`
+}
+
+type postComment struct {
+	UserID      int    `json:"user_id"`
+	UserName    string `json:"username"`
+	UserComment string `json:"user_comment"`
 }
 
 func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
@@ -176,6 +189,8 @@ func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 			CategoryName: post.Category.CategoryName,
 			CategorySlug: post.Category.CategorySlug,
 		},
-		PostTags: postTagResponses,
+		PostTags:     postTagResponses,
+		PostComments: nil,
+		PostLikes:    nil,
 	}
 }

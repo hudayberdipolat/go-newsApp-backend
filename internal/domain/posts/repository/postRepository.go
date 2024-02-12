@@ -15,7 +15,10 @@ type PostRepository interface {
 
 	GetAllPosts() ([]models.Post, error)
 	GetOnePost(postSlug string) (*models.Post, error)
+	// add like functions
 	AddLikePost(likePost models.UserLikedPost) error
+	CheckLikePost(userID, postID int) *models.UserLikedPost
+
 	AddCommentPost(addComment models.UserCommentPost) error
 	GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error)
 }

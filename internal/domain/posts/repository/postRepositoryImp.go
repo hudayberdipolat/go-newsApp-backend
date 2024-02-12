@@ -81,32 +81,9 @@ func (p postRepositoryImp) CreateTagForPost(postTag models.PostTag) error {
 	return nil
 }
 
-func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
-	if err := p.db.Create(&likePost).Error; err != nil {
-		if errors.Is(err, gorm.ErrForeignKeyViolated) {
-			log.Println(err)
-		}
-		return err
-	}
-	return nil
-}
+// functions for frontend
 
-func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) error {
-	if err := p.db.Create(&addComment).Error; err != nil {
-
-		return err
-	}
-	return nil
-}
-
-func (p postRepositoryImp) GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error) {
-	var post models.Post
-	if err := p.db.Select("posts.id").Where("post_slug=?", postSlug).Where("id=?", postID).First(&post).Error; err != nil {
-		return 0, err
-	}
-	return post.ID, nil
-}
-
+// get all posts for frontend
 func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 	var allPosts []models.Post
 	activeStatus := "active"
@@ -119,6 +96,8 @@ func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 
 }
 
+// get one post for frontend
+
 func (p postRepositoryImp) GetOnePost(postSlug string) (*models.Post, error) {
 	var post models.Post
 	activeStatus := "active"
@@ -127,4 +106,63 @@ func (p postRepositoryImp) GetOnePost(postSlug string) (*models.Post, error) {
 		return nil, err
 	}
 	return &post, nil
+}
+
+// add like post functions
+
+func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
+
+	// get post liked by user
+
+	userLikePost := p.CheckLikePost(likePost.UserID, likePost.PostID)
+	log.Println("user like post id --->>>", userLikePost.ID)
+	if userLikePost.ID != 0 {
+		if userLikePost.LikeType == likePost.LikeType {
+			// delete user like
+			if err := p.db.Delete(&userLikePost).Error; err != nil {
+				return err
+			}
+			return nil
+		} else if userLikePost.LikeType != likePost.LikeType {
+			// update like
+			if err := p.db.Model(&userLikePost).Updates(&likePost).Error; err != nil {
+				return err
+			}
+			return nil
+		}
+	}
+
+	// create new like
+	if err := p.db.Create(&likePost).Error; err != nil {
+		if errors.Is(err, gorm.ErrForeignKeyViolated) {
+			log.Println(err)
+		}
+		return err
+	}
+	return nil
+}
+func (p postRepositoryImp) CheckLikePost(userID, postID int) *models.UserLikedPost {
+	var likePost models.UserLikedPost
+	p.db.Where("user_id=?", userID).Where("post_id=?", postID).First(&likePost)
+	return &likePost
+}
+
+// end add like post functions
+
+func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) error {
+	if err := p.db.Create(&addComment).Error; err != nil {
+
+		return err
+	}
+	return nil
+}
+
+// get slug with postID
+
+func (p postRepositoryImp) GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error) {
+	var post models.Post
+	if err := p.db.Select("posts.id").Where("post_slug=?", postSlug).Where("id=?", postID).First(&post).Error; err != nil {
+		return 0, err
+	}
+	return post.ID, nil
 }
