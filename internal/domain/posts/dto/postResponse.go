@@ -136,7 +136,6 @@ func NewGetAllPostsResponse(posts []models.Post) []GetAllPostsResponse {
 				CategorySlug: post.Category.CategorySlug,
 			},
 		}
-
 		allPostResponses = append(allPostResponses, getPostResponse)
 	}
 	return allPostResponses
@@ -153,7 +152,8 @@ type GetOnePostResponse struct {
 	PostCategory postCategoryResponse `json:"post_category"`
 	PostTags     []postTagResponse    `json:"post_tags"`
 	PostComments []postComment        `json:"post_comments"`
-	PostLikes    []postLike           `json:"post_likes"`
+	Like         int                  `json:"like"`
+	Dislike      int                  `json:"dis_like"`
 }
 
 type postLike struct {
@@ -162,13 +162,15 @@ type postLike struct {
 }
 
 type postComment struct {
-	UserID      int    `json:"user_id"`
-	UserName    string `json:"username"`
+	ID          int    `json:"id"`
+	WrittenUser string `json:"written_user"`
 	UserComment string `json:"user_comment"`
+	WriteTime   string `json:"write_time"`
 }
 
 func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 	var postTagResponses []postTagResponse
+	var postComments []postComment
 	for _, postTag := range post.PostTags {
 		onePostTagResponse := postTagResponse{
 			Id:      postTag.ID,
@@ -176,6 +178,27 @@ func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 		}
 		postTagResponses = append(postTagResponses, onePostTagResponse)
 	}
+
+	for _, comment := range post.Comments {
+		onePostComment := postComment{
+			ID:          comment.ID,
+			WrittenUser: "",
+			UserComment: comment.PostComment,
+			WriteTime:   comment.CreatedAt.Format("02.01.2006 "),
+		}
+		postComments = append(postComments, onePostComment)
+	}
+
+	like := 0
+	dislike := 0
+	for _, postLike := range post.Liked {
+		if postLike.LikeType == "like" {
+			like = like + 1
+		} else if postLike.LikeType == "dislike" {
+			dislike = dislike + 1
+		}
+	}
+
 	return GetOnePostResponse{
 		ID:         post.ID,
 		PostTitle:  post.PostTitle,
@@ -190,7 +213,8 @@ func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 			CategorySlug: post.Category.CategorySlug,
 		},
 		PostTags:     postTagResponses,
-		PostComments: nil,
-		PostLikes:    nil,
+		PostComments: postComments,
+		Like:         like,
+		Dislike:      dislike,
 	}
 }

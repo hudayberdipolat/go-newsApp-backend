@@ -208,6 +208,8 @@ func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.Add
 		return errors.New("something wrong!!!")
 	}
 
+	// get post liked by user
+
 	likePost := models.UserLikedPost{
 		UserID:   userID,
 		PostID:   postID,

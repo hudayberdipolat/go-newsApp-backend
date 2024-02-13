@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"gorm.io/gorm"
@@ -81,7 +82,7 @@ func (c categoryRepositoryImp) GetOneCategory(categorySlug string) (*models.Cate
 		Select("categories.id, categories.category_name, categories.category_slug").
 		Where("category_status = ?", activeStatus).
 		Where("category_slug = ?", categorySlug).
-		Preload("Posts", "post_status = ?", activeStatus).
+		Preload("Posts", "post_status=?", activeStatus).
 		First(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("category not found")
@@ -89,19 +90,7 @@ func (c categoryRepositoryImp) GetOneCategory(categorySlug string) (*models.Cate
 		return nil, err
 	}
 
-	// if err := c.db.Table("categories").
-	// 	Select("categories.id, categories.category_name, categories.category_slug").
-	// 	Joins("LEFT JOIN posts ON categories.id = posts.category_id").
-	// 	Where("categories.category_status = ?", activeStatus).
-	// 	Where("categories.category_slug = ?", categorySlug).
-	// 	Where("posts.post_status = ?", activeStatus).
-	// 	Select("posts.id, posts.post_title, posts.post_slug").
-	// 	First(&category).Error; err != nil {
-	// 	if errors.Is(err, gorm.ErrRecordNotFound) {
-	// 		return nil, errors.New("category not found")
-	// 	}
-	// 	return nil, err
-	// }
+	log.Println(category)
 
 	return &category, nil
 }

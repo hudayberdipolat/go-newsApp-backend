@@ -84,11 +84,14 @@ func (p postRepositoryImp) CreateTagForPost(postTag models.PostTag) error {
 // functions for frontend
 
 // get all posts for frontend
+
 func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 	var allPosts []models.Post
 	activeStatus := "active"
 	if err := p.db.Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
-		Where("post_status=?", activeStatus).Preload("Category").Find(&allPosts).Error; err != nil {
+		Where("post_status=?", activeStatus).Preload("Category", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,category_name,category_slug")
+	}).Find(&allPosts).Error; err != nil {
 		return nil, err
 	}
 
@@ -101,24 +104,30 @@ func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 func (p postRepositoryImp) GetOnePost(postSlug string) (*models.Post, error) {
 	var post models.Post
 	activeStatus := "active"
-	if err := p.db.Where("post_status=?", activeStatus).Where("post_slug=?", postSlug).
-		Preload("Category").Preload("PostTags").First(&post).Error; err != nil {
+	if err := p.db.
+		Select("id, post_title, post_slug,image_url, post_desc,click_count,created_at, category_id").
+		Where("post_status=?", activeStatus).Where("post_slug=?", postSlug).
+		Preload("Category", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id, category_name, category_slug").
+				Where("category_status=?", activeStatus)
+		}).Preload("PostTags").Preload("Comments").Preload("Liked").First(&post).Error; err != nil {
 		return nil, err
 	}
+	// log.Println(post.Comments)
 	return &post, nil
 }
+
+// working functions
 
 // add like post functions
 
 func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
 
 	// get post liked by user
-
 	userLikePost := p.CheckLikePost(likePost.UserID, likePost.PostID)
-	log.Println("user like post id --->>>", userLikePost.ID)
 	if userLikePost.ID != 0 {
 		if userLikePost.LikeType == likePost.LikeType {
-			// delete user like
+			// delete user like or dislike
 			if err := p.db.Delete(&userLikePost).Error; err != nil {
 				return err
 			}
@@ -141,6 +150,9 @@ func (p postRepositoryImp) AddLikePost(likePost models.UserLikedPost) error {
 	}
 	return nil
 }
+
+// post-a on like goylandygyny ya-da goyulmadynyny barmalamak ucin function
+
 func (p postRepositoryImp) CheckLikePost(userID, postID int) *models.UserLikedPost {
 	var likePost models.UserLikedPost
 	p.db.Where("user_id=?", userID).Where("post_id=?", postID).First(&likePost)
@@ -150,10 +162,11 @@ func (p postRepositoryImp) CheckLikePost(userID, postID int) *models.UserLikedPo
 // end add like post functions
 
 func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) error {
-	if err := p.db.Create(&addComment).Error; err != nil {
 
+	if err := p.db.Create(&addComment).Error; err != nil {
 		return err
 	}
+
 	return nil
 }
 

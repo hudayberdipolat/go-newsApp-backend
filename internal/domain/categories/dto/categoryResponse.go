@@ -125,7 +125,6 @@ type getPostResponse struct {
 	ID         int    `json:"id"`
 	PostTitle  string `json:"post_title"`
 	PostSlug   string `json:"post_slug"`
-	PostDesc   string `json:"post_desc"`
 	ClickCount int    `json:"click_count"`
 	ImageUrl   string `json:"image_url"`
 	CreatedAt  string `json:"created_at"`
@@ -136,7 +135,6 @@ func newGetPostResponse(post models.Post) getPostResponse {
 		ID:         post.ID,
 		PostTitle:  post.PostTitle,
 		PostSlug:   post.PostSlug,
-		PostDesc:   post.PostDesc,
 		ClickCount: post.ClickCount,
 		ImageUrl:   *post.ImageUrl,
 		CreatedAt:  post.CreatedAt.Format("01-02-2006"),
