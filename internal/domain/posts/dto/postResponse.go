@@ -118,11 +118,22 @@ type GetAllPostsResponse struct {
 	ImageUrl     *string              `json:"image_url"`
 	CreatedAt    string               `json:"created_at"`
 	PostCategory postCategoryResponse `json:"post_category"`
+	LikeCount    int                  `json:"like_count"`
+	DislikeCount int                  `json:"dislikeCount"`
 }
 
 func NewGetAllPostsResponse(posts []models.Post) []GetAllPostsResponse {
 	var allPostResponses []GetAllPostsResponse
 	for _, post := range posts {
+		likeCount := 0
+		dislikeCount := 0
+		for _, like := range post.Liked {
+			if like.LikeType == "like" {
+				likeCount = likeCount + 1
+			} else if like.LikeType == "dislike" {
+				dislikeCount = dislikeCount + 1
+			}
+		}
 		getPostResponse := GetAllPostsResponse{
 			ID:         post.ID,
 			PostTitle:  post.PostTitle,
@@ -135,11 +146,15 @@ func NewGetAllPostsResponse(posts []models.Post) []GetAllPostsResponse {
 				CategoryName: post.Category.CategoryName,
 				CategorySlug: post.Category.CategorySlug,
 			},
+			LikeCount:    likeCount,
+			DislikeCount: dislikeCount,
 		}
 		allPostResponses = append(allPostResponses, getPostResponse)
 	}
 	return allPostResponses
 }
+
+// get one post response
 
 type GetOnePostResponse struct {
 	ID           int                  `json:"id"`
@@ -152,13 +167,8 @@ type GetOnePostResponse struct {
 	PostCategory postCategoryResponse `json:"post_category"`
 	PostTags     []postTagResponse    `json:"post_tags"`
 	PostComments []postComment        `json:"post_comments"`
-	Like         int                  `json:"like"`
-	Dislike      int                  `json:"dis_like"`
-}
-
-type postLike struct {
-	Like    string `json:"like"`
-	Dislike string `json:"dislike"`
+	LikeCount    int                  `json:"like_count"`
+	DislikeCount int                  `json:"dislike_count"`
 }
 
 type postComment struct {
@@ -167,6 +177,8 @@ type postComment struct {
 	UserComment string `json:"user_comment"`
 	WriteTime   string `json:"write_time"`
 }
+
+// return get one post response
 
 func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 	var postTagResponses []postTagResponse
@@ -189,13 +201,13 @@ func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 		postComments = append(postComments, onePostComment)
 	}
 
-	like := 0
-	dislike := 0
+	likeCount := 0
+	dislikeCount := 0
 	for _, postLike := range post.Liked {
 		if postLike.LikeType == "like" {
-			like = like + 1
+			likeCount = likeCount + 1
 		} else if postLike.LikeType == "dislike" {
-			dislike = dislike + 1
+			dislikeCount = dislikeCount + 1
 		}
 	}
 
@@ -214,7 +226,7 @@ func NewGetOnePostResponse(post *models.Post) GetOnePostResponse {
 		},
 		PostTags:     postTagResponses,
 		PostComments: postComments,
-		Like:         like,
-		Dislike:      dislike,
+		LikeCount:    likeCount,
+		DislikeCount: dislikeCount,
 	}
 }

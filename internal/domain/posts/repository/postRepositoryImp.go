@@ -91,7 +91,7 @@ func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 	if err := p.db.Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
 		Where("post_status=?", activeStatus).Preload("Category", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,category_name,category_slug")
-	}).Find(&allPosts).Error; err != nil {
+	}).Preload("Liked").Find(&allPosts).Error; err != nil {
 		return nil, err
 	}
 
