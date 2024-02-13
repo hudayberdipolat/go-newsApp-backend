@@ -107,13 +107,16 @@ func (p postRepositoryImp) GetOnePost(postSlug string) (*models.Post, error) {
 	if err := p.db.
 		Select("id, post_title, post_slug,image_url, post_desc,click_count,created_at, category_id").
 		Where("post_status=?", activeStatus).Where("post_slug=?", postSlug).
-		Preload("Category", func(db *gorm.DB) *gorm.DB {
-			return db.Select("id, category_name, category_slug").
-				Where("category_status=?", activeStatus)
-		}).Preload("PostTags").Preload("Comments").Preload("Liked").First(&post).Error; err != nil {
+		Preload("Category").Preload("PostTags").Preload("Comments").Preload("Liked").First(&post).Error; err != nil {
 		return nil, err
 	}
-	// log.Println(post.Comments)
+
+	// update post click count
+	post.ClickCount = post.ClickCount + 1
+	if err := p.db.Model(&post).Updates(models.Post{ClickCount: post.ClickCount}).Error; err != nil {
+		return nil, err
+	}
+
 	return &post, nil
 }
 
