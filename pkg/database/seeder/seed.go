@@ -31,7 +31,7 @@ func (n newSeederImp) Seeder() error {
 	admins := []models.Admin{
 		{
 			FullName:    "Hudayberdi Polatov",
-			PhoneNumber: "99365097512",
+			PhoneNumber: "99365010203",
 			AdminRole:   "super_admin",
 			AdminStatus: defaultStatus,
 			Password:    string(defaultPassword),
@@ -40,7 +40,7 @@ func (n newSeederImp) Seeder() error {
 		},
 		{
 			FullName:    "Gulnara Polatova",
-			PhoneNumber: "99365021065",
+			PhoneNumber: "99365040506",
 			AdminRole:   "admin",
 			AdminStatus: defaultStatus,
 			Password:    string(defaultPassword),
@@ -49,7 +49,7 @@ func (n newSeederImp) Seeder() error {
 		},
 		{
 			FullName:    "Nurgeldi Polatov",
-			PhoneNumber: "99365277904",
+			PhoneNumber: "99365070809",
 			AdminRole:   "admin",
 			AdminStatus: defaultStatus,
 			Password:    string(defaultPassword),
