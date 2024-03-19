@@ -1,13 +1,14 @@
 package handler
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/service"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/response"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/validate"
-	"net/http"
-	"strconv"
 )
 
 type categoryHandlerImp struct {
@@ -20,6 +21,18 @@ func NewCategoryHandler(service service.CategoryService) CategoryHandler {
 	}
 }
 
+
+func (c categoryHandlerImp) Edit(ctx *fiber.Ctx) error{
+	categoryID , _:= strconv.Atoi(ctx.Params("categoryID"))
+
+	category, err := c.categoryService.EditCategory(categoryID)
+	if err != nil {
+		errResponse := response.Error(http.StatusBadRequest, "category not found", err.Error(), nil)
+		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
+	}
+	successResponse := response.Success(http.StatusOK, "get category", category)
+	return ctx.Status(http.StatusOK).JSON(successResponse)
+}
 func (c categoryHandlerImp) GetAll(ctx *fiber.Ctx) error {
 	categories, err := c.categoryService.FindAll()
 	if err != nil {

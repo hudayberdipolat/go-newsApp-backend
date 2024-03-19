@@ -2,11 +2,12 @@ package service
 
 import (
 	"errors"
+	"time"
+
 	"github.com/gosimple/slug"
 	dto "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/repository"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
-	"time"
 )
 
 type categoryServiceImp struct {
@@ -17,6 +18,15 @@ func NewCategoryService(repo repository.CategoryRepository) CategoryService {
 	return categoryServiceImp{
 		categoryRepo: repo,
 	}
+}
+
+func (c categoryServiceImp) EditCategory(categoryID int) (*dto.EditCategoryResponse, error){
+	category , err := c.categoryRepo.Edit(categoryID); 
+	if err!=nil{
+		return nil, err
+	}
+	editCategory := dto.NewEditCategoryResponse(category)
+	return &editCategory, nil
 }
 
 func (c categoryServiceImp) FindAll() ([]dto.CategoryAllResponse, error) {

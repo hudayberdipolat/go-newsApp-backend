@@ -10,6 +10,7 @@ type CategoryService interface {
 	CreateCategory(request dto.CreateCategoryRequest) error
 	UpdateCategory(categoryID int, request dto.UpdateCategoryRequest) error
 	DeleteCategory(categoryID int) error
+	EditCategory(categoryID int) (*dto.EditCategoryResponse, error)
 
 	// functions for frontend
 	GetAllCategories() ([]dto.GetAllCategoriesResponse, error)

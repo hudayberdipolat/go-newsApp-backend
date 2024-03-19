@@ -18,6 +18,15 @@ func NewCategoryRepository(db *gorm.DB) CategoryRepository {
 	}
 }
 
+
+func (c  categoryRepositoryImp) Edit(categoryID int) (*models.Category, error){
+	var category models.Category
+	if err := c.db.First(&category, categoryID).Error; err != nil {
+		return nil, err
+	}
+	return &category, nil
+}
+
 func (c categoryRepositoryImp) GetAll() ([]models.Category, error) {
 	var categories []models.Category
 	if err := c.db.Preload("Posts").Find(&categories).Error; err != nil {
@@ -37,7 +46,7 @@ func (c categoryRepositoryImp) GetOne(categoryID int) (*models.Category, error) 
 func (c categoryRepositoryImp) Create(category models.Category) error {
 	if err := c.db.Create(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return errors.New("Bu kategoriýa ady eýýäm ulanylýar!!!")
+			return errors.New("this category name already exists")
 		}
 		return err
 	}
@@ -48,7 +57,7 @@ func (c categoryRepositoryImp) Update(categoryID int, category models.Category) 
 	var categoryModel models.Category
 	if err := c.db.Model(&categoryModel).Where("id=?", categoryID).Updates(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return errors.New("Bu kategoriýa ady eýýäm ulanylýar!!!")
+			return errors.New("this category name already exists")
 		}
 		return err
 	}
@@ -68,8 +77,12 @@ func (c categoryRepositoryImp) Delete(categoryID int) error {
 func (c categoryRepositoryImp) GetAllCategories() ([]models.Category, error) {
 	var categories []models.Category
 	categoryStatus := "active"
-	if err := c.db.Where("category_status=?", categoryStatus).Preload("Posts").Find(&categories).Error; err != nil {
+	// var postCount int64
+	if err := c.db.Select("id", "category_name", "category_slug").Where("category_status=?", categoryStatus).Preload("Posts").Find(&categories).Error; err != nil {
 		return nil, err
+	}
+	for _, category := range categories {
+		log.Println(category.CreatedAt)
 	}
 	return categories, nil
 }

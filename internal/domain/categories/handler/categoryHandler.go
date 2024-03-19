@@ -8,6 +8,7 @@ type CategoryHandler interface {
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
+	Edit(ctx *fiber.Ctx) error
 
 	// functions for frontend
 

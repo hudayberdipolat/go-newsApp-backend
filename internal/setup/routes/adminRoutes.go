@@ -36,10 +36,11 @@ func AdminRoutes(app *fiber.App) {
 
 	//category routes
 	categoryRoute := adminApiRoute.Group("/categories")
-	categoryRoute.Use(middleware.AdminMiddleware)
+	// categoryRoute.Use(middleware.AdminMiddleware)
 	categoryRoute.Get("/", categoryConstructor.CategoryHandler.GetAll)
 	categoryRoute.Get("/:categoryID", categoryConstructor.CategoryHandler.GetOne)
 	categoryRoute.Post("/create", categoryConstructor.CategoryHandler.Create)
+	categoryRoute.Get("/:categoryID/edit", categoryConstructor.CategoryHandler.Edit)
 	categoryRoute.Put("/:categoryID/update", categoryConstructor.CategoryHandler.Update)
 	categoryRoute.Delete("/:categoryID/delete", categoryConstructor.CategoryHandler.Delete)
 

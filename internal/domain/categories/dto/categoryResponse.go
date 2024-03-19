@@ -44,6 +44,21 @@ type CategoryResponse struct {
 	Posts          []postResponse
 }
 
+type EditCategoryResponse struct {
+	Id             int    `json:"id"`
+	CategoryName   string `json:"category_name"`
+	CategoryStatus string `json:"category_status"`
+}
+
+
+func NewEditCategoryResponse(category *models.Category) EditCategoryResponse{
+	return EditCategoryResponse{
+		Id:             category.ID,
+		CategoryName:   category.CategoryName,
+		CategoryStatus: category.CategoryStatus,
+	}
+}
+
 func NewOneCategoryResponse(category *models.Category) CategoryResponse {
 	var postResponses []postResponse
 	if len(category.Posts) != 0 {
@@ -73,6 +88,9 @@ type postResponse struct {
 	CreatedAt  string `json:"created_at"`
 	UpdatedAt  string `json:"updated_at"`
 }
+
+
+
 
 func newPostResponse(post models.Post) postResponse {
 	return postResponse{
