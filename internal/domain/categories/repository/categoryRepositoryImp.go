@@ -43,6 +43,15 @@ func (c categoryRepositoryImp) GetOne(categoryID int) (*models.Category, error) 
 	return &category, nil
 }
 
+
+func (c categoryRepositoryImp) FindCategory(categoryID int) (*models.Category, error){
+	var category models.Category
+	if err := c.db.First(&category,categoryID).Error; err != nil {
+		return nil, err
+	}
+	return &category, nil
+}
+
 func (c categoryRepositoryImp) Create(category models.Category) error {
 	if err := c.db.Create(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {

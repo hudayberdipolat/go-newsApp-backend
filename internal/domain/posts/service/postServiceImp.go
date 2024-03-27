@@ -2,12 +2,16 @@ package service
 
 import (
 	"errors"
+	"log"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gosimple/slug"
+	categoryRepository "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/categories/repository"
 	dto "github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/posts/repository"
+
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/models"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/config"
@@ -15,11 +19,13 @@ import (
 
 type postServiceImp struct {
 	postRepo repository.PostRepository
+	categoryRepo  categoryRepository.CategoryRepository 
 }
 
-func NewPostService(repo repository.PostRepository) PostService {
+func NewPostService(repo repository.PostRepository, categoryRepo categoryRepository.CategoryRepository) PostService {
 	return postServiceImp{
 		postRepo: repo,
+		categoryRepo:  categoryRepo,
 	}
 }
 
@@ -43,6 +49,14 @@ func (p postServiceImp) FindOne(postID int) (*dto.OnePostResponse, error) {
 }
 
 func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto.CreatePostRequest) error {
+	
+	// find category 
+	categoryID , _:= strconv.Atoi(request.CategoryID)
+	category , errCategory := p.categoryRepo.FindCategory(categoryID);
+		if errCategory != nil{
+			return errors.New("category not found!!!")
+		}
+	log.Println(category.ID)	
 	// image upload
 	path, err := utils.UploadFile(ctx, "image_url", config.PublicPath, "postImages")
 	if err != nil {
@@ -54,18 +68,23 @@ func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto
 	if request.PostStatus == "" {
 		request.PostStatus = "draft"
 	}
+	
+	log.Println(categoryID)
 	createPost := models.Post{
 		PostTitle:  request.PostTitle,
 		PostSlug:   slug.Make(request.PostTitle) + "-" + randString,
 		PostDesc:   request.PostDesc,
 		PostStatus: request.PostStatus,
 		ImageUrl:   path,
-		CategoryID: request.CategoryID,
+		CategoryID: category.ID,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 	}
 
 	if err := p.postRepo.Create(createPost); err != nil {
+		if err:= utils.DeleteFile(*path); err!=nil{
+			return err
+		}
 		return err
 	}
 	return nil
@@ -90,14 +109,14 @@ func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int,
 		}
 		request.ImageUrl = path
 	}
-
+	categoryID , _:= strconv.Atoi(request.CategoryID)
 	randString := utils.RandStringRunes(8)
 	updatePost.PostTitle = request.PostTitle
 	updatePost.PostSlug = slug.Make(request.PostTitle) + "-" + randString
 	updatePost.PostDesc = request.PostDesc
 	updatePost.ImageUrl = request.ImageUrl
 	updatePost.PostStatus = request.PostStatus
-	updatePost.CategoryID = request.CategoryID
+	updatePost.CategoryID = categoryID
 	updatePost.UpdatedAt = time.Now()
 
 	if errUpdate := p.postRepo.Update(updatePost.ID, *updatePost); errUpdate != nil {

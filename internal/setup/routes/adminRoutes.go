@@ -46,7 +46,7 @@ func AdminRoutes(app *fiber.App) {
 
 	// tag routes
 	tagRoute := adminApiRoute.Group("/tags")
-	categoryRoute.Use(middleware.AdminMiddleware)
+	// categoryRoute.Use(middleware.AdminMiddleware)
 	tagRoute.Get("/", tagConstructor.TagHandler.GetAll)
 	tagRoute.Get("/:tagID", tagConstructor.TagHandler.GetOne)
 	tagRoute.Post("/create", tagConstructor.TagHandler.Create)
@@ -55,7 +55,7 @@ func AdminRoutes(app *fiber.App) {
 
 	// post routes
 	postRoute := adminApiRoute.Group("/posts")
-	postRoute.Use(middleware.AdminMiddleware)
+	// postRoute.Use(middleware.AdminMiddleware)
 	postRoute.Get("/", postConstructor.PostHandler.GetAll)
 	postRoute.Get("/:postID", postConstructor.PostHandler.GetOne)
 	postRoute.Post("/create", postConstructor.PostHandler.Create)

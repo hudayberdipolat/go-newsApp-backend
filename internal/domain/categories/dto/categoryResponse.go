@@ -41,28 +41,20 @@ type CategoryResponse struct {
 	CategorySlug   string `json:"category_slug"`
 	CategoryStatus string `json:"category_status"`
 	CreatedAt      string `json:"created_at"`
+	PostCount      int  `json:"post_count"`
 	Posts          []postResponse
 }
 
-type EditCategoryResponse struct {
-	Id             int    `json:"id"`
-	CategoryName   string `json:"category_name"`
-	CategoryStatus string `json:"category_status"`
-}
-
-
-func NewEditCategoryResponse(category *models.Category) EditCategoryResponse{
-	return EditCategoryResponse{
-		Id:             category.ID,
-		CategoryName:   category.CategoryName,
-		CategoryStatus: category.CategoryStatus,
-	}
-}
 
 func NewOneCategoryResponse(category *models.Category) CategoryResponse {
 	var postResponses []postResponse
-	if len(category.Posts) != 0 {
+	postCount := 0
+	if len(category.Posts) != 0 {	
+		for i := 0; i < len(category.Posts); i++ {
+			postCount = postCount + 1
+		}
 		for _, post := range category.Posts {
+	
 			onePostResponse := newPostResponse(post)
 			postResponses = append(postResponses, onePostResponse)
 		}
@@ -73,6 +65,7 @@ func NewOneCategoryResponse(category *models.Category) CategoryResponse {
 		CategorySlug:   category.CategorySlug,
 		CategoryStatus: category.CategoryStatus,
 		CreatedAt:      category.CreatedAt.Format("01-02-2006"),
+		PostCount:      postCount,
 		Posts:          postResponses,
 	}
 }
@@ -91,6 +84,20 @@ type postResponse struct {
 
 
 
+type EditCategoryResponse struct {
+	Id             int    `json:"id"`
+	CategoryName   string `json:"category_name"`
+	CategoryStatus string `json:"category_status"`
+}
+
+
+func NewEditCategoryResponse(category *models.Category) EditCategoryResponse{
+	return EditCategoryResponse{
+		Id:             category.ID,
+		CategoryName:   category.CategoryName,
+		CategoryStatus: category.CategoryStatus,
+	}
+}
 
 func newPostResponse(post models.Post) postResponse {
 	return postResponse{

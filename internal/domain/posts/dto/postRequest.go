@@ -5,7 +5,7 @@ type CreatePostRequest struct {
 	PostDesc   string  `json:"post_desc" form:"post_desc" validate:"required"`
 	ImageUrl   *string `json:"image_url" form:"image_url" `
 	PostStatus string  `json:"post_status,omitempty" form:"post_status,omitempty" `
-	CategoryID int     `json:"category_id" form:"category_id" validate:"required"`
+	CategoryID string     `json:"category_id" form:"category_id" validate:"required"`
 }
 
 type UpdatePostRequest struct {
@@ -13,7 +13,7 @@ type UpdatePostRequest struct {
 	PostDesc   string  `json:"post_desc" form:"post_desc" validate:"required,min=3"`
 	ImageUrl   *string `json:"image_url" form:"image_url"`
 	PostStatus string  `json:"post_status" form:"post_status" validate:"required,omitempty"`
-	CategoryID int     `json:"category_id" form:"category_id" validate:"required" `
+	CategoryID string     `json:"category_id" form:"category_id" validate:"required" `
 }
 
 type CreateTagForPost struct {

@@ -25,7 +25,7 @@ func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 	}
 	return posts, nil
 }
-
+ 
 func (p postRepositoryImp) GetOne(postID int) (*models.Post, error) {
 	var post models.Post
 
