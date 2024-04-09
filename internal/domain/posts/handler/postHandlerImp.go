@@ -154,6 +154,13 @@ func (p postHandlerImp) AddTagForPost(ctx *fiber.Ctx) error {
 // get all posts for front
 
 func (p postHandlerImp) GetAllPosts(ctx *fiber.Ctx) error {
+
+	// page, _ := strconv.Atoi(ctx.Params("page"))
+	// page_size, _ := strconv.Atoi(ctx.Params("page_size"))
+
+	// if page <= 0 {
+	// 	page = 1
+	// }
 	allPosts, err := p.postService.GetAllPosts()
 	if err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "not found posts", err.Error(), nil)

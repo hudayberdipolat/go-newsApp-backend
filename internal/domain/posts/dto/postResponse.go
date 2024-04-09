@@ -8,7 +8,6 @@ type AllPostResponse struct {
 	ID           int                  `json:"id"`
 	PostTitle    string               `json:"post_title"`
 	PostSlug     string               `json:"post_slug"`
-	PostDesc     string               `json:"post_desc"`
 	ClickCount   int                  `json:"click_count"`
 	PostStatus   string               `json:"post_status"`
 	CategoryID   int                  `json:"category_id"`
@@ -32,7 +31,6 @@ func NewAllPostResponse(posts []models.Post) []AllPostResponse {
 			ID:         post.ID,
 			PostTitle:  post.PostTitle,
 			PostSlug:   post.PostSlug,
-			PostDesc:   post.PostDesc,
 			ClickCount: post.ClickCount,
 			PostStatus: post.PostStatus,
 			CategoryID: post.CategoryID,
