@@ -5,6 +5,7 @@ import (
 
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/config"
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/database/dbConfig"
+	"github.com/hudayberdipolat/go-newsApp-backend/pkg/database/seeder"
 	CustomHttp "github.com/hudayberdipolat/go-newsApp-backend/pkg/http"
 	"gorm.io/gorm"
 )
@@ -25,10 +26,10 @@ func GetDependencies() (*Dependencies, error) {
 	newDBConfig := dbConfig.NewDBConnection(getConfig)
 	db, err := newDBConfig.GetDBConnection()
 
-	// seed := seeder.NewSeeder(db)
-	// if errSeed := seed.Seeder(); errSeed != nil {
-	// 	return nil, err
-	// }
+	seed := seeder.NewSeeder(db)
+	if errSeed := seed.Seeder(); errSeed != nil {
+		return nil, err
+	}
 
 	if err != nil {
 		return nil, err
