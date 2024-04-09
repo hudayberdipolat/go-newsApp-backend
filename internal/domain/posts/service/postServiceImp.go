@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"log"
 	"strconv"
 	"time"
 
@@ -18,14 +17,14 @@ import (
 )
 
 type postServiceImp struct {
-	postRepo repository.PostRepository
-	categoryRepo  categoryRepository.CategoryRepository 
+	postRepo     repository.PostRepository
+	categoryRepo categoryRepository.CategoryRepository
 }
 
 func NewPostService(repo repository.PostRepository, categoryRepo categoryRepository.CategoryRepository) PostService {
 	return postServiceImp{
-		postRepo: repo,
-		categoryRepo:  categoryRepo,
+		postRepo:     repo,
+		categoryRepo: categoryRepo,
 	}
 }
 
@@ -49,14 +48,14 @@ func (p postServiceImp) FindOne(postID int) (*dto.OnePostResponse, error) {
 }
 
 func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto.CreatePostRequest) error {
-	
-	// find category 
-	categoryID , _:= strconv.Atoi(request.CategoryID)
-	category , errCategory := p.categoryRepo.FindCategory(categoryID);
-		if errCategory != nil{
-			return errors.New("category not found!!!")
-		}
-	log.Println(category.ID)	
+
+	// find category
+	categoryID, _ := strconv.Atoi(request.CategoryID)
+	category, errCategory := p.categoryRepo.FindCategory(categoryID)
+	if errCategory != nil {
+		return errors.New("category not found!!!")
+	}
+
 	// image upload
 	path, err := utils.UploadFile(ctx, "image_url", config.PublicPath, "postImages")
 	if err != nil {
@@ -65,11 +64,7 @@ func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto
 	// image upload end
 
 	randString := utils.RandStringRunes(8)
-	if request.PostStatus == "" {
-		request.PostStatus = "draft"
-	}
-	
-	log.Println(categoryID)
+
 	createPost := models.Post{
 		PostTitle:  request.PostTitle,
 		PostSlug:   slug.Make(request.PostTitle) + "-" + randString,
@@ -82,7 +77,7 @@ func (p postServiceImp) Create(ctx *fiber.Ctx, config config.Config, request dto
 	}
 
 	if err := p.postRepo.Create(createPost); err != nil {
-		if err:= utils.DeleteFile(*path); err!=nil{
+		if err := utils.DeleteFile(*path); err != nil {
 			return err
 		}
 		return err
@@ -94,6 +89,12 @@ func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int,
 	updatePost, err := p.postRepo.GetOne(postID)
 	if err != nil {
 		return errors.New("post not found")
+	}
+
+	categoryID, _ := strconv.Atoi(request.CategoryID)
+	category, errCategory := p.categoryRepo.FindCategory(categoryID)
+	if errCategory != nil {
+		return errors.New("category not found!")
 	}
 
 	file, _ := ctx.FormFile("image_url")
@@ -109,14 +110,13 @@ func (p postServiceImp) Update(ctx *fiber.Ctx, config config.Config, postID int,
 		}
 		request.ImageUrl = path
 	}
-	categoryID , _:= strconv.Atoi(request.CategoryID)
 	randString := utils.RandStringRunes(8)
 	updatePost.PostTitle = request.PostTitle
 	updatePost.PostSlug = slug.Make(request.PostTitle) + "-" + randString
 	updatePost.PostDesc = request.PostDesc
 	updatePost.ImageUrl = request.ImageUrl
 	updatePost.PostStatus = request.PostStatus
-	updatePost.CategoryID = categoryID
+	updatePost.CategoryID = category.ID
 	updatePost.UpdatedAt = time.Now()
 
 	if errUpdate := p.postRepo.Update(updatePost.ID, *updatePost); errUpdate != nil {
@@ -132,7 +132,7 @@ func (p postServiceImp) Delete(postID int) error {
 	}
 
 	//post image delete
-	if errImageDelete := utils.DeleteFile(*deletePost.ImageUrl); err != nil {
+	if errImageDelete := utils.DeleteFile(*deletePost.ImageUrl); errImageDelete != nil {
 		return errImageDelete
 	}
 	if errDelete := p.postRepo.Delete(deletePost.ID); errDelete != nil {
@@ -165,11 +165,11 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 // get all posts service
 
 func (p postServiceImp) GetAllPosts() ([]dto.GetAllPostsResponse, error) {
+
 	posts, err := p.postRepo.GetAllPosts()
 	if err != nil {
 		return nil, err
 	}
-
 	allPostsResponse := dto.NewGetAllPostsResponse(posts)
 	return allPostsResponse, err
 }
@@ -217,7 +217,6 @@ func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.Add
 	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly yada firstORCreate function ulanylmaly
 	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
 	// ilki posdy get etdirip almaly post id we post slug boyunca
-
 	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addLike.PostID, postSlug)
 	if err != nil {
 		return errors.New("something wrong!!!")

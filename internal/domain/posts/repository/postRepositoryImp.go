@@ -25,11 +25,11 @@ func (p postRepositoryImp) GetAll() ([]models.Post, error) {
 	}
 	return posts, nil
 }
- 
+
 func (p postRepositoryImp) GetOne(postID int) (*models.Post, error) {
 	var post models.Post
 
-	err := p.db.Preload("Category").Preload("PostTags").First(&post, postID).Error
+	err := p.db.Preload("Category").Preload("PostTags").Where("id=?", postID).First(&post).Error
 	if err != nil {
 		return nil, err
 	}
@@ -94,6 +94,10 @@ func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
 	}).Preload("Liked").Find(&allPosts).Error; err != nil {
 		return nil, err
 	}
+
+	// if err := p.db.Limit(10).Offset(10).Find(allPosts).Error; err != nil {
+	// 	return nil, err
+	// }
 
 	return allPosts, nil
 
