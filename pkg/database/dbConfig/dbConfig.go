@@ -2,7 +2,10 @@ package dbConfig
 
 import (
 	"fmt"
+
 	"github.com/hudayberdipolat/go-newsApp-backend/pkg/config"
+	_ "github.com/jackc/pgx/v4/stdlib" // For github.com/jackc/pgx/v4 driver
+	_ "github.com/lib/pq"              // For lib/pq driver
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
