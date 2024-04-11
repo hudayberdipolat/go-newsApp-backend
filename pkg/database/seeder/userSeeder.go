@@ -28,7 +28,6 @@ func (n newSeederImp) userSeeder() error {
 			UpdatedAt:   time.Now(),
 		},
 	}
-
 	if err := n.db.Create(&users).Error; err != nil {
 		return err
 	}

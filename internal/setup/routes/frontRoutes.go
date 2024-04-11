@@ -33,7 +33,7 @@ func FrontRoutes(app *fiber.App) {
 
 	// posts
 	posts := frontApiRoute.Group("/posts")
-	posts.Get("/:page", postConstructor.PostHandler.GetAllPosts)
+	posts.Get("/", postConstructor.PostHandler.GetAllPosts)
 	posts.Get("/:postSlug", postConstructor.PostHandler.GetOnePost)
 	posts.Use(middleware.UserMiddleware)
 	// post add comment

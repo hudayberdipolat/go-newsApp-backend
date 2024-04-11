@@ -15,13 +15,14 @@ func (n newSeederImp) productSeeder() error {
 		postTitle := faker.Word()
 		randString := utils.RandStringRunes(8)
 		imageUrl := "public/postImages/image.jpg"
+		categoryID := rand.IntN(4) + 1
 		post := models.Post{
 			PostTitle:  postTitle,
 			PostDesc:   faker.Paragraph(),
 			PostSlug:   slug.Make(postTitle) + "-" + randString,
 			PostStatus: "active",
 			ImageUrl:   &imageUrl,
-			CategoryID: rand.IntN(4),
+			CategoryID: categoryID,
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),
 		}
