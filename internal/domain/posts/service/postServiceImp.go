@@ -164,9 +164,9 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 
 // get all posts service
 
-func (p postServiceImp) GetAllPosts() ([]dto.GetAllPostsResponse, error) {
+func (p postServiceImp) GetAllPosts(page, pageSize int) ([]dto.GetAllPostsResponse, error) {
 
-	posts, err := p.postRepo.GetAllPosts()
+	posts, err := p.postRepo.GetAllPosts(page, pageSize)
 	if err != nil {
 		return nil, err
 	}

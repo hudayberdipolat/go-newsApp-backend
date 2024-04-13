@@ -85,10 +85,23 @@ func (p postRepositoryImp) CreateTagForPost(postTag models.PostTag) error {
 
 // get all posts for frontend
 
-func (p postRepositoryImp) GetAllPosts() ([]models.Post, error) {
+func (p postRepositoryImp) GetAllPosts(page, pageSize int) ([]models.Post, error) {
 	var allPosts []models.Post
 	activeStatus := "active"
-	if err := p.db.Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
+	if page == 0 {
+		page = 1
+	}
+	if page == 0 {
+		page = 1
+	}
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+	offset := (page - 1) * pageSize
+	if err := p.db.Limit(pageSize).Offset(offset).Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
 		Where("post_status=?", activeStatus).Preload("Category", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,category_name,category_slug")
 	}).Preload("Liked").Find(&allPosts).Error; err != nil {
