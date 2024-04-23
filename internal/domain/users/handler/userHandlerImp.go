@@ -1,13 +1,14 @@
 package handler
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/dto"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/domain/users/service"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/response"
 	"github.com/hudayberdipolat/go-newsApp-backend/internal/utils/validate"
-	"net/http"
-	"strconv"
 )
 
 type userHandlerImp struct {

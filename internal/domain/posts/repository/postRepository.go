@@ -20,5 +20,5 @@ type PostRepository interface {
 	CheckLikePost(userID, postID int) *models.UserLikedPost
 
 	AddCommentPost(addComment models.UserCommentPost) error
-	GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error)
+	GetPostWithIDAndPostSlug(postSlug string) (int, error)
 }

@@ -190,7 +190,7 @@ func (p postServiceImp) GetOnePost(postSlug string) (*dto.GetOnePostResponse, er
 func (p postServiceImp) AddCommentPost(userID int, postSlug string, addComment dto.AddCommentPostRequest) error {
 
 	// get post for write comment
-	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addComment.PostID, postSlug)
+	postID, err := p.postRepo.GetPostWithIDAndPostSlug(postSlug)
 	if err != nil {
 		return errors.New("something wrong!!!")
 	}
@@ -217,7 +217,7 @@ func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.Add
 	// eger user posta on like goyan bolsa we tazeden like-a bassa onda onki goyan likeni ayyrmaly yada firstORCreate function ulanylmaly
 	// userin onki we user profile-de userin haysy posta like goyyan bolsa onda sol postlaryn sanawyny select etdirmeli
 	// ilki posdy get etdirip almaly post id we post slug boyunca
-	postID, err := p.postRepo.GetPostWithIDAndPostSlug(addLike.PostID, postSlug)
+	postID, err := p.postRepo.GetPostWithIDAndPostSlug(postSlug)
 	if err != nil {
 		return errors.New("something wrong!!!")
 	}
@@ -233,7 +233,6 @@ func (p postServiceImp) AddLikePost(userID int, postSlug string, addLike dto.Add
 		PostID:   postID,
 		LikeType: addLike.LikeType,
 	}
-
 	if err := p.postRepo.AddLikePost(likePost); err != nil {
 		return err
 	}

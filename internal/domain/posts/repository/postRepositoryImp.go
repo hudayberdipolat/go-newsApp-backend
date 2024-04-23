@@ -192,9 +192,9 @@ func (p postRepositoryImp) AddCommentPost(addComment models.UserCommentPost) err
 
 // get slug with postID
 
-func (p postRepositoryImp) GetPostWithIDAndPostSlug(postID int, postSlug string) (int, error) {
+func (p postRepositoryImp) GetPostWithIDAndPostSlug(postSlug string) (int, error) {
 	var post models.Post
-	if err := p.db.Select("posts.id").Where("post_slug=?", postSlug).Where("id=?", postID).First(&post).Error; err != nil {
+	if err := p.db.Select("posts.id").Where("post_slug=?", postSlug).First(&post).Error; err != nil {
 		return 0, err
 	}
 	return post.ID, nil
