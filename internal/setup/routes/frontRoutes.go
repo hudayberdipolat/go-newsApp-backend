@@ -29,12 +29,14 @@ func FrontRoutes(app *fiber.App) {
 	// categories
 	categories := frontApiRoute.Group("/categories")
 	categories.Get("/", categoryConstructor.CategoryHandler.GetAllCategories)
-	categories.Get("/:categorySlug", categoryConstructor.CategoryHandler.GetOneCategory)
+	// categories.Get("/:categorySlug", categoryConstructor.CategoryHandler.GetOneCategory)
+	categories.Get("/:page/:page_size", categoryConstructor.CategoryHandler.GetOneCategory)
 
 	// posts
 	posts := frontApiRoute.Group("/posts")
 	posts.Get("/:page/:page_size", postConstructor.PostHandler.GetAllPosts)
 	posts.Get("/:postSlug", postConstructor.PostHandler.GetOnePost)
+
 	posts.Use(middleware.UserMiddleware)
 	// post add comment
 	posts.Post("/:postSlug/add-comment", postConstructor.PostHandler.AddComment)

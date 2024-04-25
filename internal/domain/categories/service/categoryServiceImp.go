@@ -20,9 +20,9 @@ func NewCategoryService(repo repository.CategoryRepository) CategoryService {
 	}
 }
 
-func (c categoryServiceImp) EditCategory(categoryID int) (*dto.EditCategoryResponse, error){
-	category , err := c.categoryRepo.Edit(categoryID); 
-	if err!=nil{
+func (c categoryServiceImp) EditCategory(categoryID int) (*dto.EditCategoryResponse, error) {
+	category, err := c.categoryRepo.Edit(categoryID)
+	if err != nil {
 		return nil, err
 	}
 	editCategory := dto.NewEditCategoryResponse(category)

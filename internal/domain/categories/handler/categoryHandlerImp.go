@@ -21,9 +21,8 @@ func NewCategoryHandler(service service.CategoryService) CategoryHandler {
 	}
 }
 
-
-func (c categoryHandlerImp) Edit(ctx *fiber.Ctx) error{
-	categoryID , _:= strconv.Atoi(ctx.Params("categoryID"))
+func (c categoryHandlerImp) Edit(ctx *fiber.Ctx) error {
+	categoryID, _ := strconv.Atoi(ctx.Params("categoryID"))
 
 	category, err := c.categoryService.EditCategory(categoryID)
 	if err != nil {

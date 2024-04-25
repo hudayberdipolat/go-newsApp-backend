@@ -164,7 +164,20 @@ func (p postServiceImp) CreateTagForPost(createPostTag dto.CreateTagForPost) err
 
 // get all posts service
 
-func (p postServiceImp) GetAllPosts(page, pageSize int) ([]dto.GetAllPostsResponse, error) {
+func (p postServiceImp) GetAllPosts(category string, page, pageSize int) ([]dto.GetAllPostsResponse, error) {
+	if category != "" {
+		getCategory, err := p.categoryRepo.GetCategoryBySlug(category)
+		if err != nil {
+			return nil, err
+		}
+		// select post with category_id
+		posts, err := p.postRepo.GetPostsWithCategory(getCategory.ID, page, pageSize)
+		if err != nil {
+			return nil, err
+		}
+		allPostsResponse := dto.NewGetAllPostsResponse(posts)
+		return allPostsResponse, err
+	}
 
 	posts, err := p.postRepo.GetAllPosts(page, pageSize)
 	if err != nil {
@@ -172,6 +185,7 @@ func (p postServiceImp) GetAllPosts(page, pageSize int) ([]dto.GetAllPostsRespon
 	}
 	allPostsResponse := dto.NewGetAllPostsResponse(posts)
 	return allPostsResponse, err
+
 }
 
 // get one post  service
@@ -192,11 +206,11 @@ func (p postServiceImp) AddCommentPost(userID int, postSlug string, addComment d
 	// get post for write comment
 	postID, err := p.postRepo.GetPostWithIDAndPostSlug(postSlug)
 	if err != nil {
-		return errors.New("something wrong!!!")
+		return errors.New("something wrong")
 	}
 
 	if postID == 0 {
-		return errors.New("something wrong!!!")
+		return errors.New("something wrong")
 	}
 
 	addPostComment := models.UserCommentPost{

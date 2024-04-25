@@ -9,7 +9,7 @@ type CategoryRepository interface {
 	Create(category models.Category) error
 	Update(categoryID int, category models.Category) error
 	Delete(categoryID int) error
-	
+	GetCategoryBySlug(categorySlug string) (*models.Category, error)
 	Edit(categoryID int) (*models.Category, error)
 	// functions for frontend
 

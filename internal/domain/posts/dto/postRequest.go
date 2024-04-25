@@ -22,7 +22,6 @@ type CreateTagForPost struct {
 }
 
 type AddCommentPostRequest struct {
-	PostID      int    `json:"post_id" validate:"required"`
 	PostComment string `json:"post_comment" validate:"required"`
 }
 

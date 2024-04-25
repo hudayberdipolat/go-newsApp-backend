@@ -107,13 +107,32 @@ func (p postRepositoryImp) GetAllPosts(page, pageSize int) ([]models.Post, error
 	}).Preload("Liked").Find(&allPosts).Error; err != nil {
 		return nil, err
 	}
-
-	// if err := p.db.Limit(10).Offset(10).Find(allPosts).Error; err != nil {
-	// 	return nil, err
-	// }
-
 	return allPosts, nil
+}
 
+func (p postRepositoryImp) GetPostsWithCategory(categoryID int, page, pageSize int) ([]models.Post, error) {
+	var posts []models.Post
+	activeStatus := "active"
+	if page == 0 {
+		page = 1
+	}
+	if page == 0 {
+		page = 1
+	}
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+	offset := (page - 1) * pageSize
+	if err := p.db.Limit(pageSize).Offset(offset).Select("id, post_title, post_slug, image_url, category_id,click_count, created_at ").
+		Where("post_status=?", activeStatus).Where("category_id =?", categoryID).Preload("Category", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,category_name,category_slug")
+	}).Preload("Liked").Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return posts, nil
 }
 
 // get one post for frontend

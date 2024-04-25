@@ -14,6 +14,7 @@ type PostRepository interface {
 	// functions for frontend
 
 	GetAllPosts(page, pageSize int) ([]models.Post, error)
+	GetPostsWithCategory(categoryID int, page, pageSize int) ([]models.Post, error)
 	GetOnePost(postSlug string) (*models.Post, error)
 	// add like functions
 	AddLikePost(likePost models.UserLikedPost) error

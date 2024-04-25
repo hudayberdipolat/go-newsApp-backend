@@ -157,7 +157,9 @@ func (p postHandlerImp) GetAllPosts(ctx *fiber.Ctx) error {
 
 	page, _ := strconv.Atoi(ctx.Params("page"))
 	pageSize, _ := strconv.Atoi(ctx.Params("page_size"))
-	allPosts, err := p.postService.GetAllPosts(page, pageSize)
+	category := ctx.Query("category")
+
+	allPosts, err := p.postService.GetAllPosts(category, page, pageSize)
 	if err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "not found posts", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
@@ -197,6 +199,7 @@ func (p postHandlerImp) AddComment(ctx *fiber.Ctx) error {
 		errResponse := response.Error(http.StatusBadRequest, "validate error", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)
 	}
+	// add comment
 	if err := p.postService.AddCommentPost(userID, postSlug, addCommentRequest); err != nil {
 		errResponse := response.Error(http.StatusBadRequest, "sorry something wrong", err.Error(), nil)
 		return ctx.Status(http.StatusBadRequest).JSON(errResponse)

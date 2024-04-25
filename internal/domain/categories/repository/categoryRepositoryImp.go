@@ -18,8 +18,7 @@ func NewCategoryRepository(db *gorm.DB) CategoryRepository {
 	}
 }
 
-
-func (c  categoryRepositoryImp) Edit(categoryID int) (*models.Category, error){
+func (c categoryRepositoryImp) Edit(categoryID int) (*models.Category, error) {
 	var category models.Category
 	if err := c.db.First(&category, categoryID).Error; err != nil {
 		return nil, err
@@ -43,10 +42,9 @@ func (c categoryRepositoryImp) GetOne(categoryID int) (*models.Category, error) 
 	return &category, nil
 }
 
-
-func (c categoryRepositoryImp) FindCategory(categoryID int) (*models.Category, error){
+func (c categoryRepositoryImp) FindCategory(categoryID int) (*models.Category, error) {
 	var category models.Category
-	if err := c.db.First(&category,categoryID).Error; err != nil {
+	if err := c.db.First(&category, categoryID).Error; err != nil {
 		return nil, err
 	}
 	return &category, nil
@@ -104,15 +102,19 @@ func (c categoryRepositoryImp) GetOneCategory(categorySlug string) (*models.Cate
 		Select("categories.id, categories.category_name, categories.category_slug").
 		Where("category_status = ?", activeStatus).
 		Where("category_slug = ?", categorySlug).
-		Preload("Posts", "post_status=?", activeStatus).
-		First(&category).Error; err != nil {
+		Preload("Posts").First(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("category not found")
 		}
 		return nil, err
 	}
+	return &category, nil
+}
 
-	log.Println(category)
-
+func (c categoryRepositoryImp) GetCategoryBySlug(categorySlug string) (*models.Category, error) {
+	var category models.Category
+	if err := c.db.Where("category_slug=?", categorySlug).First(&category).Error; err != nil {
+		return nil, err
+	}
 	return &category, nil
 }
